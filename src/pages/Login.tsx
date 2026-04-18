@@ -51,9 +51,8 @@ export default function Login() {
         <div style={{ position: 'absolute', top: '40%', left: -60, width: 200, height: 200, borderRadius: '50%', backgroundColor: 'rgba(59,130,246,0.3)' }} />
 
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative', zIndex: 1 }}>
-          <div style={{ width: 36, height: 36, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: 15 }}>O</div>
-          <Logo size="lg" darkBg />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <Logo size="lg" allWhite />
         </div>
 
         {/* Copy */}
@@ -80,7 +79,7 @@ export default function Login() {
           </div>
         </div>
 
-        <p style={{ fontSize: 12, color: '#93C5FD', position: 'relative', zIndex: 1 }}>© 2025 OrcaLink</p>
+        <p style={{ fontSize: 12, color: '#93C5FD', position: 'relative', zIndex: 1 }}>© 2026 OrcaLink</p>
       </div>
 
       {/* Painel direito */}
