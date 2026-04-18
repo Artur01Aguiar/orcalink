@@ -341,7 +341,8 @@ export default function FormEditor() {
                               placeholder="Nome da opção" />
                             <span style={{ fontSize: 12, color: '#94A3B8', flexShrink: 0 }}>+R$</span>
                             <input type="number" min={0} className="input" style={{ width: 90, padding: '8px 12px', fontSize: 13 }}
-                              value={opt.price_add} onChange={e => updateOption(qIdx, oIdx, { price_add: Number(e.target.value) })} placeholder="0" />
+                              value={opt.price_add} onChange={e => updateOption(qIdx, oIdx, { price_add: Number(e.target.value) })} placeholder="0"
+                              onFocus={e => e.target.select()} />
                             {q.options.length > 1 && (
                               <button onClick={() => removeOption(qIdx, oIdx)}
                                 style={{ color: '#CBD5E1', background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, lineHeight: 1, flexShrink: 0 }}>×</button>
@@ -360,7 +361,8 @@ export default function FormEditor() {
                         <span style={{ fontSize: 13, color: '#64748B' }}>Preço por unidade: R$</span>
                         <input type="number" min={0} className="input" style={{ width: 100, padding: '8px 12px', fontSize: 13 }}
                           value={q.options[0]?.price_add ?? 0}
-                          onChange={e => updateOption(qIdx, 0, { price_add: Number(e.target.value), label: 'unidade' })} />
+                          onChange={e => updateOption(qIdx, 0, { price_add: Number(e.target.value), label: 'unidade' })}
+                          onFocus={e => e.target.select()} />
                       </div>
                     )}
 
