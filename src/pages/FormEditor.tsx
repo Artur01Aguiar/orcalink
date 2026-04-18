@@ -58,6 +58,7 @@ export default function FormEditor() {
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedFormIdRef = useRef<string | null>(id ?? null)
+  const isSavingRef = useRef(false)
 
   useEffect(() => {
     if (!isNew && id) loadForm(id)
@@ -84,7 +85,8 @@ export default function FormEditor() {
   }, [title, description, whatsappNumber, questions])
 
   async function performAutoSave() {
-    if (!user || !title.trim()) return
+    if (!user || !title.trim() || isSavingRef.current) return
+    isSavingRef.current = true
     setAutoSaveStatus('saving')
     const formSlug = slug || generateSlug(title)
     let formId = savedFormIdRef.current
@@ -95,7 +97,7 @@ export default function FormEditor() {
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
       } as Record<string, unknown>).select().single()
-      if (error) { setAutoSaveStatus('idle'); return }
+      if (error) { setAutoSaveStatus('idle'); isSavingRef.current = false; return }
       formId = data.id
       savedFormIdRef.current = formId
       setSavedFormId(formId)
@@ -118,6 +120,7 @@ export default function FormEditor() {
       )
     }
     setAutoSaveStatus('saved')
+    isSavingRef.current = false
   }
 
   function handleTitleChange(val: string) {
