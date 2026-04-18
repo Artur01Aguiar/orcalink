@@ -186,24 +186,6 @@ export default function Dashboard() {
                 </div>
               ))}
 
-              <button
-                onClick={() => navigate('/forms/new')}
-                style={{
-                  padding: '18px 24px',
-                  borderRadius: 12,
-                  border: '2px dashed #E2E8F0',
-                  background: 'transparent',
-                  color: '#94A3B8',
-                  fontSize: 14,
-                  cursor: 'pointer',
-                  transition: 'border-color 0.15s, color 0.15s',
-                  fontFamily: 'inherit',
-                }}
-                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#2563EB'; (e.currentTarget as HTMLButtonElement).style.color = '#2563EB' }}
-                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#E2E8F0'; (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8' }}
-              >
-                + Adicionar novo formulário
-              </button>
             </div>
           )}
         </div>

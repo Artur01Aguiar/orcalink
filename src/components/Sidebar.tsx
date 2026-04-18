@@ -4,7 +4,6 @@ import { Logo } from './Logo'
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: '⊞' },
-  { to: '/forms/new', label: 'Novo formulário', icon: '◧' },
   { to: '/respostas', label: 'Respostas', icon: '☰' },
 ]
 
