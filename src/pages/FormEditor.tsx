@@ -11,6 +11,24 @@ const QUESTION_TYPES = [
   { value: 'number', label: 'Quantidade / número' },
 ] as const
 
+function formatPhone(raw: string): string {
+  const d = raw.replace(/\D/g, '').slice(0, 11)
+  if (d.length <= 2) return d.length ? `(${d}` : ''
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
+}
+
+function phoneToWhatsApp(formatted: string): string {
+  return '55' + formatted.replace(/\D/g, '')
+}
+
+function whatsAppToDisplay(stored: string): string {
+  const digits = stored.replace(/\D/g, '')
+  const local = digits.startsWith('55') ? digits.slice(2) : digits
+  return formatPhone(local)
+}
+
 function formatCurrency(v: number) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
@@ -48,7 +66,8 @@ export default function FormEditor() {
       setTitle(form.title)
       setDescription(form.description ?? '')
       setSlug(form.slug)
-      setWhatsappNumber((form as unknown as Record<string, string>).whatsapp_number ?? '')
+      const stored = (form as unknown as Record<string, string>).whatsapp_number ?? ''
+      setWhatsappNumber(stored ? whatsAppToDisplay(stored) : '')
     }
     const { data: qs } = await supabase.from('questions').select('*').eq('form_id', formId).order('order_index')
     if (qs) setQuestions(qs)
@@ -103,7 +122,7 @@ export default function FormEditor() {
       const { data, error } = await supabase.from('forms').insert({
         user_id: user.id, title, description,
         slug: formSlug, active: true,
-        whatsapp_number: whatsappNumber || null,
+        whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
       } as Record<string, unknown>).select().single()
       if (error) { alert('Erro: ' + error.message); setSaving(false); return }
       formId = data.id
@@ -111,7 +130,7 @@ export default function FormEditor() {
     } else {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
-        whatsapp_number: whatsappNumber || null,
+        whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
       } as Record<string, unknown>).eq('id', formId)
     }
 
@@ -245,8 +264,9 @@ export default function FormEditor() {
                     Seu WhatsApp <span style={{ fontWeight: 400, color: '#94A3B8' }}>(para o cliente te contatar direto)</span>
                   </label>
                   <input className="input" value={whatsappNumber}
-                    onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
-                    placeholder="5581999999999 (com código do país)"
+                    onChange={e => setWhatsappNumber(formatPhone(e.target.value))}
+                    placeholder="(81) 99999-9999"
+                    maxLength={15}
                     style={{ borderColor: !whatsappNumber ? '#FCA5A5' : undefined }} />
                   {!whatsappNumber ? (
                     <p style={{ fontSize: 11, color: '#EF4444', marginTop: 4, fontWeight: 600 }}>
