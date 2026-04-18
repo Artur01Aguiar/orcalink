@@ -123,18 +123,11 @@ export default function Respostas() {
         <div style={{ padding: '28px 32px', maxWidth: 1200 }}>
 
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 28 }}>
             <div className="card" style={{ padding: '20px 24px' }}>
               <p style={{ fontSize: 36, fontWeight: 800, color: '#0A0A0A', lineHeight: 1 }}>{filtered.length}</p>
               <p style={{ fontSize: 13, color: '#64748B', marginTop: 8 }}>Orçamentos recebidos</p>
               <div style={{ width: 32, height: 3, backgroundColor: '#2563EB', borderRadius: 2, marginTop: 12 }} />
-            </div>
-            <div className="card" style={{ padding: '20px 24px' }}>
-              <p style={{ fontSize: 36, fontWeight: 800, color: '#0A0A0A', lineHeight: 1 }}>
-                {filtered.filter(s => s.client_contact).length}
-              </p>
-              <p style={{ fontSize: 13, color: '#64748B', marginTop: 8 }}>Com dados de contato</p>
-              <div style={{ width: 32, height: 3, backgroundColor: '#10B981', borderRadius: 2, marginTop: 12 }} />
             </div>
             <div className="card" style={{ padding: '20px 24px' }}>
               <p style={{ fontSize: 28, fontWeight: 800, color: '#0A0A0A', lineHeight: 1 }}>{formatCurrency(totalRevenue)}</p>
@@ -169,7 +162,7 @@ export default function Respostas() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1.5px solid #F1F5F9' }}>
-                    {['Data', 'Formulário', 'Nome', 'Contato', 'Escolhas', 'Total'].map(h => (
+                    {['Data', 'Formulário', 'Escolhas', 'Total'].map(h => (
                       <th key={h} style={{
                         padding: '12px 20px',
                         textAlign: 'left',
@@ -203,22 +196,6 @@ export default function Respostas() {
                         }}>
                           {row.form_title}
                         </span>
-                      </td>
-                      <td style={{ padding: '14px 20px', fontSize: 14, fontWeight: 600, color: '#0A0A0A' }}>
-                        {row.client_name || <span style={{ color: '#CBD5E1' }}>—</span>}
-                      </td>
-                      <td style={{ padding: '14px 20px' }}>
-                        {row.client_contact ? (
-                          <a
-                            href={`https://wa.me/${row.client_contact.replace(/\D/g, '')}`}
-                            target="_blank" rel="noreferrer"
-                            style={{ fontSize: 13, color: '#2563EB', fontWeight: 500, textDecoration: 'none' }}
-                          >
-                            {row.client_contact}
-                          </a>
-                        ) : (
-                          <span style={{ fontSize: 13, color: '#CBD5E1' }}>—</span>
-                        )}
                       </td>
                       <td style={{ padding: '14px 20px', fontSize: 13, color: '#64748B', maxWidth: 280 }}>
                         <span style={{
