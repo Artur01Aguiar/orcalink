@@ -286,7 +286,7 @@ export default function FormEditor() {
             )}
             {slug && (
               <button className="btn-ghost" style={{ fontSize: 13, padding: '8px 16px' }}
-                onClick={() => window.open(`${window.location.origin}/f/${slug}`, '_blank')}>
+                onClick={() => window.open(`${window.location.origin}/f/${slug}?preview=true`, '_blank')}>
                 Preview ↗
               </button>
             )}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/Logo'
 import type { Form, Question, QuestionOption } from '../lib/types'
@@ -19,6 +19,8 @@ const WA_ICON = (
 export default function PublicForm() {
   const { slug } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const isPreview = searchParams.get('preview') === 'true'
 
   const [form, setForm] = useState<Form | null>(null)
   const [questions, setQuestions] = useState<Question[]>([])
@@ -99,14 +101,15 @@ export default function PublicForm() {
     const waLink = buildWhatsAppLink()
     const total = calcTotal()
 
-    // Salva no banco automaticamente — sem pedir nada ao cliente
-    await supabase.from('submissions').insert({
-      form_id: form.id,
-      answers,
-      total_price: total,
-      client_name: null,
-      client_contact: null,
-    })
+    if (!isPreview) {
+      await supabase.from('submissions').insert({
+        form_id: form.id,
+        answers,
+        total_price: total,
+        client_name: null,
+        client_contact: null,
+      })
+    }
 
     // Abre WhatsApp
     if (waLink) window.open(waLink, '_blank')
@@ -140,6 +143,17 @@ export default function PublicForm() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F8FAFC' }}>
+
+      {/* Banner preview */}
+      {isPreview && (
+        <div style={{
+          backgroundColor: '#FEF9C3', borderBottom: '1px solid #FDE047',
+          padding: '8px 24px', textAlign: 'center',
+          fontSize: 12, fontWeight: 600, color: '#854D0E',
+        }}>
+          Modo preview — respostas não serão salvas
+        </div>
+      )}
 
       {/* Header */}
       <header style={{
