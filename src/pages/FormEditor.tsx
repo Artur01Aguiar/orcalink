@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase, generateSlug } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -55,6 +55,9 @@ export default function FormEditor() {
   const [savedFormId, setSavedFormId] = useState<string | null>(id ?? null)
   const [published, setPublished] = useState(false)
   const [pubLink, setPubLink] = useState('')
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const savedFormIdRef = useRef<string | null>(id ?? null)
 
   useEffect(() => {
     if (!isNew && id) loadForm(id)
@@ -71,6 +74,50 @@ export default function FormEditor() {
     }
     const { data: qs } = await supabase.from('questions').select('*').eq('form_id', formId).order('order_index')
     if (qs) setQuestions(qs)
+  }
+
+  useEffect(() => {
+    if (!title.trim() || !user) return
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
+    autoSaveTimer.current = setTimeout(() => performAutoSave(), 1500)
+    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current) }
+  }, [title, description, whatsappNumber, questions])
+
+  async function performAutoSave() {
+    if (!user || !title.trim()) return
+    setAutoSaveStatus('saving')
+    const formSlug = slug || generateSlug(title)
+    let formId = savedFormIdRef.current
+
+    if (!formId) {
+      const { data, error } = await supabase.from('forms').insert({
+        user_id: user.id, title, description,
+        slug: formSlug, active: true,
+        whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+      } as Record<string, unknown>).select().single()
+      if (error) { setAutoSaveStatus('idle'); return }
+      formId = data.id
+      savedFormIdRef.current = formId
+      setSavedFormId(formId)
+      setSlug(formSlug)
+    } else {
+      await supabase.from('forms').update({
+        title, description, slug: formSlug,
+        whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+      } as Record<string, unknown>).eq('id', formId)
+    }
+
+    await supabase.from('questions').delete().eq('form_id', formId)
+    if (questions.length > 0) {
+      await supabase.from('questions').insert(
+        questions.map((q, i) => ({
+          form_id: formId, order_index: i,
+          type: q.type, label: q.label,
+          required: q.required, options: q.options,
+        }))
+      )
+    }
+    setAutoSaveStatus('saved')
   }
 
   function handleTitleChange(val: string) {
@@ -227,7 +274,13 @@ export default function FormEditor() {
               {slug && <p style={{ fontSize: 12, color: '#94A3B8' }}>/f/{slug}</p>}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {autoSaveStatus === 'saving' && (
+              <span style={{ fontSize: 12, color: '#94A3B8' }}>Salvando...</span>
+            )}
+            {autoSaveStatus === 'saved' && (
+              <span style={{ fontSize: 12, color: '#10B981', fontWeight: 600 }}>✓ Salvo automaticamente</span>
+            )}
             {slug && (
               <button className="btn-ghost" style={{ fontSize: 13, padding: '8px 16px' }}
                 onClick={() => window.open(`${window.location.origin}/f/${slug}`, '_blank')}>
@@ -235,7 +288,7 @@ export default function FormEditor() {
               </button>
             )}
             <button className="btn-primary" style={{ padding: '10px 22px' }} onClick={save} disabled={saving}>
-              {saving ? 'Salvando...' : '🚀 Publicar'}
+              {saving ? 'Publicando...' : '🚀 Publicar'}
             </button>
           </div>
         </header>
