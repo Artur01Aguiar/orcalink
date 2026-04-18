@@ -20,8 +20,9 @@ export default function Login() {
       if (error) setError('Email ou senha incorretos.')
       else navigate('/dashboard')
     } else {
-      const { error } = await supabase.auth.signUp({ email, password })
+      const { data, error } = await supabase.auth.signUp({ email, password })
       if (error) setError(error.message)
+      else if (data.session) navigate('/dashboard')
       else setSuccess('Conta criada! Verifique seu email para confirmar.')
     }
     setLoading(false)
