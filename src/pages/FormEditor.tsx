@@ -265,7 +265,7 @@ export default function FormEditor() {
                   </label>
                   <input className="input" value={whatsappNumber}
                     onChange={e => setWhatsappNumber(formatPhone(e.target.value))}
-                    placeholder="(81) 99999-9999"
+                    placeholder="(11) 99999-9999"
                     maxLength={15}
                     style={{ borderColor: !whatsappNumber ? '#FCA5A5' : undefined }} />
                   {!whatsappNumber ? (
