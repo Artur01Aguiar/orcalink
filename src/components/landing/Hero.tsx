@@ -134,7 +134,7 @@ export default function Hero() {
             </div>
 
             {/* Desktop: tamanho original */}
-            <div className="relative hidden lg:block">
+            <div className="relative hidden lg:flex justify-end">
               <PhoneMockup />
               {notifications.map((notif, i) => (
                 <motion.div
