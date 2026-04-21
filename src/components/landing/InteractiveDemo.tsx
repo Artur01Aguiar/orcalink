@@ -128,7 +128,6 @@ export default function InteractiveDemo() {
   const [direction, setDirection] = useState(1)
 
   const currentQ = QUESTIONS[step]
-  const isLast = step === QUESTIONS.length - 1
   const isDone = step === QUESTIONS.length
 
   function getTotal() {
