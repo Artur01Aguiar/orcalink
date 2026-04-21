@@ -150,7 +150,7 @@ export default function Hero() {
                   style={{
                     left: i === 0 ? '-120px' : i === 2 ? '-110px' : undefined,
                     right: i === 1 ? '-110px' : undefined,
-                    top: i === 0 ? '120px' : i === 1 ? '260px' : '390px',
+                    top: i === 0 ? '60px' : i === 1 ? '180px' : '310px',
                     zIndex: 10,
                   }}
                 >
