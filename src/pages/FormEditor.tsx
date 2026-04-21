@@ -197,8 +197,8 @@ export default function FormEditor() {
     return (
       <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
         <Sidebar />
-        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
-          <div className="card" style={{ maxWidth: 520, width: '100%', padding: '48px 44px', textAlign: 'center' }}>
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }} className="pb-28 md:pb-8">
+          <div className="card" style={{ maxWidth: 520, width: '100%', padding: '32px 20px', textAlign: 'center' }}>
             <div style={{
               width: 72, height: 72, backgroundColor: '#DCFCE7', borderRadius: '50%',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
