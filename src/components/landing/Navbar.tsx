@@ -60,7 +60,7 @@ export default function Navbar() {
               Entrar
             </a>
             <a
-              href="#precos"
+              href="/login?signup=true"
               className="btn-primary text-sm px-5 py-2.5"
             >
               Criar meu link grátis
@@ -98,7 +98,7 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              href="#precos"
+              href="/login?signup=true"
               onClick={() => setMenuOpen(false)}
               className="block btn-primary text-sm text-center mt-2"
             >

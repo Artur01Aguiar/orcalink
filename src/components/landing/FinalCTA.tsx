@@ -24,7 +24,7 @@ export default function FinalCTA() {
           </p>
 
           <motion.a
-            href="#precos"
+            href="/login?signup=true"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex items-center gap-2.5 bg-white text-primary font-heading font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200"

@@ -68,7 +68,7 @@ export default function Hero() {
             {/* CTAs */}
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-8">
               <a
-                href="#precos"
+                href="/login?signup=true"
                 className="inline-flex items-center gap-2 bg-primary text-white font-heading font-bold text-base px-7 py-4 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 Criar meu link grátis
