@@ -143,7 +143,6 @@ export default function Comparison() {
           transition={{ duration: 0.55, delay: 0.35 }}
           className="text-center text-muted text-sm mt-8 max-w-2xl mx-auto leading-relaxed"
         >
-          Typeform custa US$29/mês e não calcula preço. PandaDoc custa US$35/mês e é pra empresa grande.{' '}
           <span className="text-dark font-semibold">OrcaLink é o único feito pra você.</span>
         </motion.p>
       </div>

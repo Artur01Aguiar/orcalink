@@ -226,14 +226,6 @@ export default function Pricing() {
           ))}
         </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.55, delay: 0.5 }}
-          className="text-center text-muted text-sm mt-10 max-w-xl mx-auto leading-relaxed"
-        >
-          Break-even em 5 clientes. Com 30 clientes no plano Pro = <span className="text-dark font-semibold">R$897/mês de receita recorrente</span> — ideal para quem indica a plataforma.
-        </motion.p>
       </div>
     </section>
   )
