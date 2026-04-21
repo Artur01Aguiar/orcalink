@@ -62,7 +62,7 @@ const plans: Plan[] = [
       'API de integrações',
     ],
     cta: 'Falar com a gente',
-    ctaLink: 'https://wa.me/5581999999999?text=Olá,%20quero%20saber%20mais%20sobre%20o%20plano%20Business%20da%20OrcaLink',
+    ctaLink: 'https://wa.me/551152868190?text=Olá,%20quero%20saber%20mais%20sobre%20o%20plano%20Business%20da%20OrcaLink',
   },
 ]
 
