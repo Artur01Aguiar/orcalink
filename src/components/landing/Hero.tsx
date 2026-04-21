@@ -101,7 +101,7 @@ export default function Hero() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative flex justify-center lg:justify-end"
+            className="relative hidden lg:flex justify-end"
           >
             <div className="relative">
               <PhoneMockup />
