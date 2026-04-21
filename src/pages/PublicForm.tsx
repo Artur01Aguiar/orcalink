@@ -311,7 +311,7 @@ export default function PublicForm() {
                     width: '100%', padding: '16px 0',
                     backgroundColor: submitting ? '#86efac' : '#25D366',
                     color: '#fff', border: 'none',
-                    borderRadius: 12, fontSize: 16, fontWeight: 700,
+                    borderRadius: 12, fontSize: 13, fontWeight: 700,
                     cursor: submitting ? 'default' : 'pointer',
                     fontFamily: 'inherit',
                     boxShadow: '0 4px 14px rgba(37,211,102,0.35)',

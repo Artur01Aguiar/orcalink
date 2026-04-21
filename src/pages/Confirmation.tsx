@@ -93,7 +93,7 @@ export default function Confirmation() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                   width: '100%', padding: '14px 0',
                   backgroundColor: '#25D366', color: '#fff',
-                  borderRadius: 12, fontSize: 15, fontWeight: 700,
+                  borderRadius: 12, fontSize: 13, fontWeight: 700,
                   textDecoration: 'none', marginBottom: 12,
                   boxShadow: '0 4px 14px rgba(37,211,102,0.3)',
                 }}
