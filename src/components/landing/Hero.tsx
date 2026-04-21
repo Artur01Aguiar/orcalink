@@ -101,31 +101,50 @@ export default function Hero() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative hidden lg:flex justify-end"
+            className="relative flex justify-center lg:justify-end"
           >
-            <div className="relative">
+            {/* Mobile: scaled + notificações compactas */}
+            <div
+              className="relative lg:hidden"
+              style={{ transform: 'scale(0.72)', transformOrigin: 'top center', marginBottom: '-162px' }}
+            >
               <PhoneMockup />
-
-              {/* Floating notifications */}
               {notifications.map((notif, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20, y: 0 }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                    y: [0, -6, 0],
-                  }}
+                  animate={{ opacity: 1, x: 0, y: [0, -6, 0] }}
                   transition={{
                     opacity: { delay: 0.8 + notif.delay, duration: 0.4 },
                     x: { delay: 0.8 + notif.delay, duration: 0.4 },
-                    y: {
-                      delay: 1.2 + notif.delay,
-                      duration: 3,
-                      repeat: Infinity,
-                      repeatType: 'loop',
-                      ease: 'easeInOut',
-                    },
+                    y: { delay: 1.2 + notif.delay, duration: 3, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut' },
+                  }}
+                  className="absolute bg-white border border-border rounded-xl px-3 py-2 shadow-card flex items-center gap-2 whitespace-nowrap"
+                  style={{
+                    left: i === 0 ? '-90px' : i === 2 ? '-80px' : undefined,
+                    right: i === 1 ? '-90px' : undefined,
+                    top: i === 0 ? '60px' : i === 1 ? '180px' : '310px',
+                    zIndex: 10,
+                  }}
+                >
+                  <span className="text-base">{notif.emoji}</span>
+                  <span className="text-xs font-semibold text-dark font-heading">{notif.text}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Desktop: tamanho original */}
+            <div className="relative hidden lg:block">
+              <PhoneMockup />
+              {notifications.map((notif, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -20, y: 0 }}
+                  animate={{ opacity: 1, x: 0, y: [0, -6, 0] }}
+                  transition={{
+                    opacity: { delay: 0.8 + notif.delay, duration: 0.4 },
+                    x: { delay: 0.8 + notif.delay, duration: 0.4 },
+                    y: { delay: 1.2 + notif.delay, duration: 3, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut' },
                   }}
                   className="absolute bg-white border border-border rounded-xl px-3 py-2 shadow-card flex items-center gap-2 whitespace-nowrap"
                   style={{
