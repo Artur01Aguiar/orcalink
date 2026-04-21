@@ -1,5 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #2563EB;
+  --color-dark: #0A0A0A;
+  --color-light: #EFF6FF;
+  --color-background: #F8FAFC;
+  --color-success: #10B981;
+  --color-muted: #64748B;
+  --color-border: #E2E8F0;
+
+  --font-heading: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.08), 0 1px 2px -1px rgba(0,0,0,0.05);
+  --shadow-card-hover: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+  --shadow-card-blue: 0 0 0 2px #2563EB, 0 10px 25px -5px rgba(37,99,235,0.2);
+
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+}
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -171,6 +191,36 @@ textarea.input { resize: vertical; min-height: 80px; }
 }
 .option-card:hover { border-color: #93C5FD; background: #EFF6FF; }
 .option-card.selected { border-color: #2563EB; background: #EFF6FF; }
+
+/* Landing page utilities */
+html { scroll-behavior: smooth; }
+
+.section-heading {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  color: #0A0A0A;
+  letter-spacing: -0.03em;
+}
+
+.dot-pattern {
+  background-image: radial-gradient(circle, #CBD5E1 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.phone-mockup {
+  border-radius: 40px;
+  box-shadow:
+    inset 0 0 0 2px #1a1a2e,
+    0 25px 50px -12px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255,255,255,0.1);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 /* Price bar */
 .price-bar {
