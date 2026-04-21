@@ -159,7 +159,8 @@ export default function Respostas() {
             </div>
           ) : (
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 560 }}>
                 <thead>
                   <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1.5px solid #F1F5F9' }}>
                     {['Data', 'Formulário', 'Escolhas', 'Total'].map(h => (
@@ -216,6 +217,7 @@ export default function Respostas() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </div>
