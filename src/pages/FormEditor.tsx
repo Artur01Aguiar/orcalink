@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, CloudUpload } from 'lucide-react'
 import { supabase, generateSlug } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { Sidebar } from '../components/Sidebar'
@@ -274,10 +274,7 @@ export default function FormEditor() {
               <RefreshCw size={16} color="#CBD5E1" style={{ animation: 'spin 1s linear infinite' }} />
             )}
             {autoSaveStatus === 'saved' && (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
-                <polyline points="9 12 11 14 15 10" />
-              </svg>
+              <CloudUpload size={18} color="#10B981" />
             )}
             {slug && (
               <button className="btn-ghost hidden sm:flex" style={{ fontSize: 13, padding: '8px 14px' }}
