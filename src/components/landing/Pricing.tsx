@@ -30,7 +30,7 @@ const plans: Plan[] = [
     ],
     cta: 'Criar conta grátis',
     ctaNote: 'Sem cartão de crédito',
-    ctaLink: '/login',
+    ctaLink: '/login?signup=true',
   },
   {
     name: 'Pro',
@@ -47,7 +47,7 @@ const plans: Plan[] = [
       'Suporte prioritário',
     ],
     cta: 'Começar 14 dias grátis',
-    ctaLink: '/login',
+    ctaLink: '/login?signup=true',
   },
   {
     name: 'Business',
@@ -62,7 +62,7 @@ const plans: Plan[] = [
       'API de integrações',
     ],
     cta: 'Falar com a gente',
-    ctaLink: '/login',
+    ctaLink: 'https://wa.me/5581999999999?text=Olá,%20quero%20saber%20mais%20sobre%20o%20plano%20Business%20da%20OrcaLink',
   },
 ]
 
