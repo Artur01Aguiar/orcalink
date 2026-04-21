@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Copy, Check, Pencil, Pause, Play, Trash2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { Sidebar } from '../components/Sidebar'
@@ -152,35 +153,66 @@ export default function Dashboard() {
                     </p>
                   </div>
 
-                  {/* Actions */}
-                  <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                  {/* Actions — ícones no mobile, texto no desktop */}
+                  <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                    {/* Copiar */}
                     <button
-                      className="btn-ghost"
-                      style={{ fontSize: 13, padding: '8px 14px', color: copied === form.slug ? '#10B981' : undefined }}
                       onClick={() => copyLink(form.slug)}
+                      title="Copiar link"
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '8px', border: '1px solid #E2E8F0', borderRadius: 8,
+                        background: '#fff', cursor: 'pointer', color: copied === form.slug ? '#10B981' : '#64748B',
+                        fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', transition: 'all 0.15s',
+                      }}
                     >
-                      {copied === form.slug ? '✓' : 'Copiar'}
+                      {copied === form.slug ? <Check size={15} /> : <Copy size={15} />}
+                      <span className="hidden sm:inline">{copied === form.slug ? 'Copiado' : 'Copiar'}</span>
                     </button>
+
+                    {/* Editar */}
                     <button
-                      className="btn-secondary"
-                      style={{ fontSize: 13, padding: '8px 14px' }}
                       onClick={() => navigate(`/forms/${form.id}`)}
+                      title="Editar"
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '8px', border: '1px solid #BFDBFE', borderRadius: 8,
+                        background: '#EFF6FF', cursor: 'pointer', color: '#2563EB',
+                        fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', transition: 'all 0.15s',
+                      }}
                     >
-                      Editar
+                      <Pencil size={15} />
+                      <span className="hidden sm:inline">Editar</span>
                     </button>
+
+                    {/* Pausar/Ativar */}
                     <button
-                      className="btn-ghost hidden sm:inline-flex"
-                      style={{ fontSize: 13, padding: '8px 14px' }}
                       onClick={() => toggleActive(form)}
+                      title={form.active ? 'Pausar' : 'Ativar'}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '8px', border: '1px solid #E2E8F0', borderRadius: 8,
+                        background: '#fff', cursor: 'pointer', color: '#64748B',
+                        fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', transition: 'all 0.15s',
+                      }}
                     >
-                      {form.active ? 'Pausar' : 'Ativar'}
+                      {form.active ? <Pause size={15} /> : <Play size={15} />}
+                      <span className="hidden sm:inline">{form.active ? 'Pausar' : 'Ativar'}</span>
                     </button>
+
+                    {/* Deletar */}
                     <button
-                      className="btn-ghost hidden sm:inline-flex"
-                      style={{ fontSize: 13, padding: '8px 14px', color: '#EF4444', borderColor: '#FECACA' }}
                       onClick={() => deleteForm(form.id)}
+                      title="Deletar"
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        padding: '8px', border: '1px solid #FECACA', borderRadius: 8,
+                        background: '#fff', cursor: 'pointer', color: '#EF4444',
+                        fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', transition: 'all 0.15s',
+                      }}
                     >
-                      Deletar
+                      <Trash2 size={15} />
+                      <span className="hidden sm:inline">Deletar</span>
                     </button>
                   </div>
                 </div>
