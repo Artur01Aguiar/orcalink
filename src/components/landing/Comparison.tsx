@@ -66,25 +66,19 @@ export default function Comparison() {
           initial={{ opacity: 0, y: 28 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.15 }}
-          className="overflow-hidden rounded-2xl border border-border bg-white shadow-card"
+          className="rounded-2xl border border-border bg-white shadow-card overflow-x-auto"
         >
           {/* Header */}
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-4" style={{ minWidth: 480 }}>
             <div className="px-5 py-4 border-b border-border" />
             {['Planilha / WhatsApp', 'Typeform', 'OrcaLink'].map((col, i) => (
               <div
                 key={col}
                 className={`px-4 py-4 border-b text-center ${
-                  i === 2
-                    ? 'bg-light border-primary/30 border-l-2 border-r-2'
-                    : 'border-border'
+                  i === 2 ? 'bg-light border-primary/30 border-l-2 border-r-2' : 'border-border'
                 }`}
               >
-                <span
-                  className={`text-sm font-heading font-bold ${
-                    i === 2 ? 'text-primary' : 'text-dark'
-                  }`}
-                >
+                <span className={`text-sm font-heading font-bold ${i === 2 ? 'text-primary' : 'text-dark'}`}>
                   {col}
                 </span>
                 {i === 2 && (
@@ -103,18 +97,16 @@ export default function Comparison() {
             <div
               key={rowIdx}
               className={`grid grid-cols-4 ${rowIdx < features.length - 1 ? 'border-b border-border' : ''}`}
+              style={{ minWidth: 480 }}
             >
               <div className="px-5 py-4 flex items-center">
                 <span className="text-sm font-medium text-dark">{feature.label}</span>
               </div>
-
               {[feature.planilha, feature.typeform, feature.orcalink].map((cell, colIdx) => (
                 <div
                   key={colIdx}
                   className={`px-4 py-4 flex flex-col items-center justify-center gap-1 ${
-                    colIdx === 2
-                      ? 'bg-light border-l-2 border-r-2 border-primary/30'
-                      : ''
+                    colIdx === 2 ? 'bg-light border-l-2 border-r-2 border-primary/30' : ''
                   }`}
                 >
                   <StatusIcon status={cell.status} />
@@ -127,7 +119,7 @@ export default function Comparison() {
           ))}
 
           {/* OrcaLink footer highlight */}
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-4" style={{ minWidth: 480 }}>
             <div className="px-5 py-3" />
             <div className="py-3" />
             <div className="py-3" />
