@@ -269,9 +269,15 @@ export default function FormEditor() {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <span className="hidden sm:inline" style={{ fontSize: 12, color: autoSaveStatus === 'saved' ? '#10B981' : '#94A3B8', fontWeight: autoSaveStatus === 'saved' ? 600 : 400 }}>
-              {autoSaveStatus === 'saving' ? 'Salvando...' : autoSaveStatus === 'saved' ? '✓ Salvo' : ''}
-            </span>
+            {autoSaveStatus !== 'idle' && (
+              <span style={{
+                fontSize: 16,
+                color: autoSaveStatus === 'saved' ? '#10B981' : '#CBD5E1',
+                transition: 'color 0.3s',
+              }} title={autoSaveStatus === 'saving' ? 'Salvando...' : 'Salvo'}>
+                {autoSaveStatus === 'saving' ? '○' : '●'}
+              </span>
+            )}
             {slug && (
               <button className="btn-ghost hidden sm:flex" style={{ fontSize: 13, padding: '8px 14px' }}
                 onClick={() => window.open(`${window.location.origin}/f/${slug}?preview=true`, '_blank')}>
