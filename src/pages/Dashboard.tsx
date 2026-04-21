@@ -88,7 +88,7 @@ export default function Dashboard() {
         <div style={{ padding: '20px 16px', maxWidth: 1100 }} className="pb-24 md:pb-8 md:px-8">
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="grid grid-cols-3 gap-3" style={{ marginBottom: 32 }}>
             {stats.map(s => (
               <div key={s.label} className="card" style={{ padding: '20px 24px' }}>
                 <p style={{ fontSize: 36, fontWeight: 800, color: '#0A0A0A', lineHeight: 1 }}>{s.value}</p>
