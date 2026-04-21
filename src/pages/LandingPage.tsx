@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Navbar from '../components/landing/Navbar'
 import Hero from '../components/landing/Hero'
 import SocialProof from '../components/landing/SocialProof'
@@ -13,8 +14,17 @@ import FinalCTA from '../components/landing/FinalCTA'
 import Footer from '../components/landing/Footer'
 
 export default function LandingPage() {
+  useEffect(() => {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = '/landing.css'
+    link.id = 'landing-css'
+    document.head.appendChild(link)
+    return () => { document.getElementById('landing-css')?.remove() }
+  }, [])
+
   return (
-    <div className="min-h-screen font-body">
+    <div className="min-h-screen" style={{ fontFamily: 'Inter, sans-serif' }}>
       <Navbar />
       <main>
         <Hero />
