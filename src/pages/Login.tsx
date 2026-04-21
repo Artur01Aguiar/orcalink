@@ -42,24 +42,21 @@ export default function Login() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', backgroundColor: '#F8FAFC' }}>
 
-      {/* Painel esquerdo — brand */}
-      <div style={{
+      {/* Painel esquerdo — visível só no desktop */}
+      <div className="hidden md:flex" style={{
         width: 520, flexShrink: 0,
         backgroundColor: '#2563EB',
         padding: '48px 52px',
-        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+        flexDirection: 'column', justifyContent: 'space-between',
         position: 'relative', overflow: 'hidden',
       }}>
-        {/* Círculos decorativos */}
         <div style={{ position: 'absolute', bottom: -60, right: -80, width: 360, height: 360, borderRadius: '50%', backgroundColor: 'rgba(29,78,216,0.6)' }} />
         <div style={{ position: 'absolute', top: '40%', left: -60, width: 200, height: 200, borderRadius: '50%', backgroundColor: 'rgba(59,130,246,0.3)' }} />
 
-        {/* Logo */}
         <div style={{ position: 'relative', zIndex: 1 }}>
           <Logo size="lg" allWhite />
         </div>
 
-        {/* Copy */}
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h1 style={{ fontSize: 46, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 16 }}>
             Seu cliente vê o<br />preço na hora.
@@ -68,11 +65,7 @@ export default function Login() {
             Sem te mandar mensagem.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {[
-              'Formulário inteligente de orçamento',
-              'Preço calculado em tempo real',
-              'Link fácil de compartilhar',
-            ].map(t => (
+            {['Formulário inteligente de orçamento', 'Preço calculado em tempo real', 'Link fácil de compartilhar'].map(t => (
               <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 20, height: 20, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <span style={{ color: '#fff', fontSize: 11, fontWeight: 700 }}>✓</span>
@@ -86,10 +79,16 @@ export default function Login() {
         <p style={{ fontSize: 12, color: '#93C5FD', position: 'relative', zIndex: 1 }}>© 2026 OrcaLink</p>
       </div>
 
-      {/* Painel direito */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+      {/* Painel do formulário */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }}>
+
+        {/* Logo visível só no mobile */}
+        <div className="flex md:hidden" style={{ marginBottom: 32 }}>
+          <Logo size="md" />
+        </div>
+
         <div style={{ width: '100%', maxWidth: 400 }}>
-          <div className="card" style={{ padding: '36px 40px' }}>
+          <div className="card" style={{ padding: '32px 28px' }}>
             <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0A0A0A', marginBottom: 4 }}>
               {mode === 'login' ? 'Entrar na sua conta' : 'Criar conta grátis'}
             </h2>

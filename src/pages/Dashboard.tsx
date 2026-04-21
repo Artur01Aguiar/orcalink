@@ -66,7 +66,7 @@ export default function Dashboard() {
         <header style={{
           backgroundColor: '#fff',
           borderBottom: '1px solid #F1F5F9',
-          padding: '20px 32px',
+          padding: '16px 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -76,18 +76,18 @@ export default function Dashboard() {
           boxShadow: '0 1px 0 #F1F5F9',
         }}>
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: '#0A0A0A' }}>Meus Formulários</h1>
-            <p style={{ fontSize: 13, color: '#94A3B8', marginTop: 2 }}>Gerencie seus links de orçamento</p>
+            <h1 style={{ fontSize: 18, fontWeight: 700, color: '#0A0A0A' }}>Meus Formulários</h1>
+            <p className="hidden sm:block" style={{ fontSize: 13, color: '#94A3B8', marginTop: 2 }}>Gerencie seus links de orçamento</p>
           </div>
-          <button className="btn-primary" onClick={() => navigate('/forms/new')}>
-            + Criar novo formulário
+          <button className="btn-primary" style={{ fontSize: 13, padding: '9px 14px' }} onClick={() => navigate('/forms/new')}>
+            + Novo formulário
           </button>
         </header>
 
-        <div style={{ padding: '28px 32px', maxWidth: 1100 }}>
+        <div style={{ padding: '20px 16px', maxWidth: 1100 }} className="pb-24 md:pb-8 md:px-8">
 
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
+          <div className="grid grid-cols-3 gap-3 mb-5">
             {stats.map(s => (
               <div key={s.label} className="card" style={{ padding: '20px 24px' }}>
                 <p style={{ fontSize: 36, fontWeight: 800, color: '#0A0A0A', lineHeight: 1 }}>{s.value}</p>
@@ -159,7 +159,7 @@ export default function Dashboard() {
                       style={{ fontSize: 13, padding: '8px 14px', color: copied === form.slug ? '#10B981' : undefined }}
                       onClick={() => copyLink(form.slug)}
                     >
-                      {copied === form.slug ? '✓ Copiado!' : 'Copiar link'}
+                      {copied === form.slug ? '✓' : 'Copiar'}
                     </button>
                     <button
                       className="btn-secondary"
@@ -169,14 +169,14 @@ export default function Dashboard() {
                       Editar
                     </button>
                     <button
-                      className="btn-ghost"
+                      className="btn-ghost hidden sm:inline-flex"
                       style={{ fontSize: 13, padding: '8px 14px' }}
                       onClick={() => toggleActive(form)}
                     >
                       {form.active ? 'Pausar' : 'Ativar'}
                     </button>
                     <button
-                      className="btn-ghost"
+                      className="btn-ghost hidden sm:inline-flex"
                       style={{ fontSize: 13, padding: '8px 14px', color: '#EF4444', borderColor: '#FECACA' }}
                       onClick={() => deleteForm(form.id)}
                     >
