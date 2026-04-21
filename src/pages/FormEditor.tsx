@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Loader2, CheckCircle2 } from 'lucide-react'
 import { supabase, generateSlug } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { Sidebar } from '../components/Sidebar'
@@ -269,14 +270,11 @@ export default function FormEditor() {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {autoSaveStatus !== 'idle' && (
-              <span style={{
-                fontSize: 16,
-                color: autoSaveStatus === 'saved' ? '#10B981' : '#CBD5E1',
-                transition: 'color 0.3s',
-              }} title={autoSaveStatus === 'saving' ? 'Salvando...' : 'Salvo'}>
-                {autoSaveStatus === 'saving' ? '○' : '●'}
-              </span>
+            {autoSaveStatus === 'saving' && (
+              <Loader2 size={16} color="#CBD5E1" style={{ animation: 'spin 1s linear infinite' }} />
+            )}
+            {autoSaveStatus === 'saved' && (
+              <CheckCircle2 size={16} color="#10B981" />
             )}
             {slug && (
               <button className="btn-ghost hidden sm:flex" style={{ fontSize: 13, padding: '8px 14px' }}
