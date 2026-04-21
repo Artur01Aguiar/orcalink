@@ -29,16 +29,7 @@ function whatsAppToDisplay(stored: string): string {
   return formatPhone(local)
 }
 
-function formatCurrency(v: number) {
-  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 
-function calcPreviewTotal(questions: Question[]): number {
-  return questions.reduce((t, q) => {
-    if (q.options.length > 0) return t + q.options[0].price_add
-    return t
-  }, 0)
-}
 
 export default function FormEditor() {
   const { id } = useParams()
@@ -264,41 +255,37 @@ export default function FormEditor() {
         {/* Top bar */}
         <header style={{
           backgroundColor: '#fff', borderBottom: '1px solid #F1F5F9',
-          padding: '16px 28px', display: 'flex', alignItems: 'center',
+          padding: '12px 16px', display: 'flex', alignItems: 'center',
           justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <button className="btn-ghost" style={{ padding: '8px 14px', fontSize: 13 }}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+            <button className="btn-ghost" style={{ padding: '8px 12px', fontSize: 13, flexShrink: 0 }}
               onClick={() => navigate('/dashboard')}>← Voltar</button>
-            <div>
-              <p style={{ fontSize: 15, fontWeight: 600, color: '#0A0A0A' }}>
+            <div className="hidden sm:block" style={{ minWidth: 0 }}>
+              <p style={{ fontSize: 15, fontWeight: 600, color: '#0A0A0A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {isNew ? 'Novo formulário' : title || 'Editar formulário'}
               </p>
               {slug && <p style={{ fontSize: 12, color: '#94A3B8' }}>/f/{slug}</p>}
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {autoSaveStatus === 'saving' && (
-              <span style={{ fontSize: 12, color: '#94A3B8' }}>Salvando...</span>
-            )}
-            {autoSaveStatus === 'saved' && (
-              <span style={{ fontSize: 12, color: '#10B981', fontWeight: 600 }}>✓ Salvo automaticamente</span>
-            )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <span className="hidden sm:inline" style={{ fontSize: 12, color: autoSaveStatus === 'saved' ? '#10B981' : '#94A3B8', fontWeight: autoSaveStatus === 'saved' ? 600 : 400 }}>
+              {autoSaveStatus === 'saving' ? 'Salvando...' : autoSaveStatus === 'saved' ? '✓ Salvo' : ''}
+            </span>
             {slug && (
-              <button className="btn-ghost" style={{ fontSize: 13, padding: '8px 16px' }}
+              <button className="btn-ghost hidden sm:flex" style={{ fontSize: 13, padding: '8px 14px' }}
                 onClick={() => window.open(`${window.location.origin}/f/${slug}?preview=true`, '_blank')}>
                 Preview ↗
               </button>
             )}
-            <button className="btn-primary" style={{ padding: '10px 22px' }} onClick={save} disabled={saving}>
+            <button className="btn-primary" style={{ padding: '10px 18px', fontSize: 13 }} onClick={save} disabled={saving}>
               {saving ? 'Publicando...' : '🚀 Publicar'}
             </button>
           </div>
         </header>
 
-        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-          {/* Editor */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '28px 28px 40px' }}>
+        <div style={{ flex: 1, overflowY: 'auto' }} className="pb-24 md:pb-10">
+          <div style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px 40px' }} className="md:px-8 md:pt-7">
 
             {/* Info básica */}
             <div className="card" style={{ padding: '24px 28px', marginBottom: 20 }}>
@@ -437,51 +424,6 @@ export default function FormEditor() {
               }}>
                 + Adicionar pergunta
               </button>
-            </div>
-          </div>
-
-          {/* Preview */}
-          <div style={{
-            width: 300, borderLeft: '1px solid #F1F5F9', backgroundColor: '#F1F5F9',
-            padding: '24px 16px', overflowY: 'auto',
-          }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 }}>
-              Como o cliente vê
-            </p>
-            <div style={{ backgroundColor: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1px solid #E2E8F0' }}>
-              <div style={{ backgroundColor: '#F8FAFC', padding: '12px 16px 10px', borderBottom: '1px solid #F1F5F9' }}>
-                <p style={{ fontWeight: 700, fontSize: 13, color: '#0A0A0A' }}>{title || 'Seu formulário'}</p>
-                {description && <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{description}</p>}
-              </div>
-              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-                {questions.length === 0 ? (
-                  <p style={{ fontSize: 12, color: '#CBD5E1', textAlign: 'center', padding: '16px 0' }}>Nenhuma pergunta ainda</p>
-                ) : questions.slice(0, 2).map((q, i) => (
-                  <div key={i}>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 8 }}>{q.label || `Pergunta ${i + 1}`}</p>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                      {q.options.slice(0, 3).map((opt, oi) => (
-                        <div key={oi} style={{
-                          padding: '8px 12px', borderRadius: 8,
-                          border: `1.5px solid ${oi === 0 ? '#2563EB' : '#E2E8F0'}`,
-                          backgroundColor: oi === 0 ? '#EFF6FF' : '#F8FAFC',
-                          display: 'flex', justifyContent: 'space-between',
-                        }}>
-                          <span style={{ fontSize: 11, color: oi === 0 ? '#2563EB' : '#374151', fontWeight: oi === 0 ? 600 : 400 }}>
-                            {opt.label || 'Opção'}
-                          </span>
-                          {opt.price_add > 0 && <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 600 }}>+{formatCurrency(opt.price_add)}</span>}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                {questions.length > 2 && <p style={{ fontSize: 11, color: '#94A3B8', textAlign: 'center' }}>+ {questions.length - 2} mais...</p>}
-              </div>
-              <div style={{ backgroundColor: '#0A0A0A', padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: '#64748B' }}>Total estimado</p>
-                <p style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{formatCurrency(calcPreviewTotal(questions))}</p>
-              </div>
             </div>
           </div>
         </div>
