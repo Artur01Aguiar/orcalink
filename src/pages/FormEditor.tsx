@@ -48,6 +48,7 @@ export default function FormEditor() {
   const [published, setPublished] = useState(false)
   const [pubLink, setPubLink] = useState('')
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [showBadge, setShowBadge] = useState(true)
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedFormIdRef = useRef<string | null>(id ?? null)
   const isSavingRef = useRef(false)
@@ -64,6 +65,7 @@ export default function FormEditor() {
       setSlug(form.slug)
       const stored = (form as unknown as Record<string, string>).whatsapp_number ?? ''
       setWhatsappNumber(stored ? whatsAppToDisplay(stored) : '')
+      setShowBadge((form as unknown as Record<string, unknown>).show_badge !== false)
     }
     const { data: qs } = await supabase.from('questions').select('*').eq('form_id', formId).order('order_index')
     if (qs) setQuestions(qs)
@@ -74,7 +76,7 @@ export default function FormEditor() {
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     autoSaveTimer.current = setTimeout(() => performAutoSave(), 1500)
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current) }
-  }, [title, description, whatsappNumber, questions])
+  }, [title, description, whatsappNumber, questions, showBadge])
 
   async function performAutoSave() {
     if (!user || !title.trim() || isSavingRef.current) return
@@ -88,6 +90,7 @@ export default function FormEditor() {
         user_id: user.id, title, description,
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+        show_badge: showBadge,
       } as Record<string, unknown>).select().single()
       if (error) { setAutoSaveStatus('idle'); isSavingRef.current = false; return }
       formId = data.id
@@ -98,6 +101,7 @@ export default function FormEditor() {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+        show_badge: showBadge,
       } as Record<string, unknown>).eq('id', formId)
     }
 
@@ -165,6 +169,7 @@ export default function FormEditor() {
         user_id: user.id, title, description,
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+        show_badge: showBadge,
       } as Record<string, unknown>).select().single()
       if (error) { alert('Erro: ' + error.message); setSaving(false); return }
       formId = data.id
@@ -173,6 +178,7 @@ export default function FormEditor() {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+        show_badge: showBadge,
       } as Record<string, unknown>).eq('id', formId)
     }
 
@@ -336,6 +342,28 @@ export default function FormEditor() {
                     </button>
                   </div>
                 )}
+
+                {/* Badge toggle */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', backgroundColor: '#F8FAFC', borderRadius: 10, border: '1px solid #F1F5F9' }}>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 2 }}>Badge "Feito com OrcaLink"</p>
+                    <p style={{ fontSize: 11, color: '#94A3B8' }}>{showBadge ? 'Aparece no rodapé do formulário' : 'Oculto no formulário'}</p>
+                  </div>
+                  <button
+                    onClick={() => setShowBadge(v => !v)}
+                    style={{
+                      width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
+                      backgroundColor: showBadge ? '#2563EB' : '#CBD5E1',
+                      position: 'relative', transition: 'background-color 0.2s', flexShrink: 0,
+                    }}
+                  >
+                    <span style={{
+                      position: 'absolute', top: 3, left: showBadge ? 23 : 3,
+                      width: 18, height: 18, borderRadius: '50%', backgroundColor: '#fff',
+                      transition: 'left 0.2s', display: 'block',
+                    }} />
+                  </button>
+                </div>
               </div>
             </div>
 

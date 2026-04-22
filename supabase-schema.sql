@@ -20,6 +20,7 @@ create table public.forms (
   title text not null,
   description text,
   active boolean default true,
+  show_badge boolean default true,
   created_at timestamptz default now()
 );
 

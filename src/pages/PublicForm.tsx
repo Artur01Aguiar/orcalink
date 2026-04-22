@@ -354,18 +354,20 @@ export default function PublicForm() {
           )}
 
           {/* Badge OrcaLink */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '6px 14px',
-              backgroundColor: '#EFF6FF',
-              border: '1px solid #BFDBFE',
-              borderRadius: 20,
-              fontSize: 12, color: '#2563EB', fontWeight: 600,
-            }}>
-              ⚡ Feito com OrcaLink
+          {(form as unknown as Record<string, unknown>).show_badge !== false && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '6px 14px',
+                backgroundColor: '#EFF6FF',
+                border: '1px solid #BFDBFE',
+                borderRadius: 20,
+                fontSize: 12, color: '#2563EB', fontWeight: 600,
+              }}>
+                ⚡ Feito com OrcaLink
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
