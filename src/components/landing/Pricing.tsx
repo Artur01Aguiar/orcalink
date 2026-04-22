@@ -2,6 +2,8 @@ import { useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap } from 'lucide-react'
 
+type Feature = { label: string; soon?: boolean }
+
 type Plan = {
   name: string
   monthlyPrice: number | null
@@ -9,7 +11,7 @@ type Plan = {
   badge?: string
   highlighted?: boolean
   freeForever?: boolean
-  features: string[]
+  features: Feature[]
   cta: string
   ctaNote?: string
   ctaLink: string
@@ -22,11 +24,10 @@ const plans: Plan[] = [
     annualPrice: 0,
     freeForever: true,
     features: [
-      '1 formulário de orçamento',
-      'Até 30 orçamentos/mês',
-      'Link público personalizado',
-      'Badge "Feito com OrcaLink"',
-      'Notificações por email',
+      { label: '1 formulário de orçamento' },
+      { label: 'Até 10 orçamentos/mês' },
+      { label: 'Link público personalizado' },
+      { label: 'Badge "Feito com OrcaLink"' },
     ],
     cta: 'Criar conta grátis',
     ctaNote: 'Sem cartão de crédito',
@@ -39,14 +40,12 @@ const plans: Plan[] = [
     badge: 'Mais popular',
     highlighted: true,
     features: [
-      'Formulários ilimitados',
-      'Orçamentos ilimitados',
-      'Sem badge OrcaLink',
-      'Analytics de conversão',
-      'Notificação por WhatsApp',
-      'Suporte prioritário',
+      { label: 'Formulários ilimitados' },
+      { label: 'Orçamentos ilimitados' },
+      { label: 'Sem badge OrcaLink' },
+      { label: 'Suporte prioritário' },
     ],
-    cta: 'Começar 14 dias grátis',
+    cta: 'Assinar Agora',
     ctaLink: '/login?signup=true',
   },
   {
@@ -54,15 +53,12 @@ const plans: Plan[] = [
     monthlyPrice: 59.9,
     annualPrice: 47.9,
     features: [
-      'Tudo do Pro',
-      'Domínio customizado',
-      'Múltiplos profissionais',
-      'Analytics avançado',
-      'Relatório mensal em PDF',
-      'API de integrações',
+      { label: 'Tudo do Pro' },
+      { label: 'Domínio customizado', soon: true },
+      { label: 'Múltiplos profissionais', soon: true },
     ],
-    cta: 'Falar com a gente',
-    ctaLink: 'https://wa.me/551152868190?text=Olá,%20quero%20saber%20mais%20sobre%20o%20plano%20Business%20da%20OrcaLink',
+    cta: 'Lista de Espera',
+    ctaLink: 'https://wa.me/551152868190?text=Quero%20entrar%20para%20lista%20de%20espera%20do%20plano%20business',
   },
 ]
 
@@ -198,7 +194,14 @@ export default function Pricing() {
                       <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <Check size={11} className="text-success" strokeWidth={3} />
                       </div>
-                      <span className="text-sm text-dark">{feature}</span>
+                      <span className="text-sm text-dark flex items-center gap-2 flex-wrap">
+                        {feature.label}
+                        {feature.soon && (
+                          <span className="text-[10px] font-semibold bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full font-heading whitespace-nowrap">
+                            Em breve
+                          </span>
+                        )}
+                      </span>
                     </li>
                   ))}
                 </ul>
