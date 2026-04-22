@@ -62,7 +62,6 @@ export function Sidebar() {
         position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
         backgroundColor: '#0A0A0A',
         borderTop: '1px solid rgba(255,255,255,0.08)',
-        display: 'flex',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}>
         {navItems.map(item => (
