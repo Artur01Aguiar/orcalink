@@ -29,6 +29,7 @@ export default function PublicForm() {
   const [submitting, setSubmitting] = useState(false)
   const [notFound, setNotFound] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [limitReached, setLimitReached] = useState(false)
 
   useEffect(() => { if (slug) loadForm(slug) }, [slug])
 
@@ -38,6 +39,8 @@ export default function PublicForm() {
     setForm(data)
     const { data: qs } = await supabase.from('questions').select('*').eq('form_id', data.id).order('order_index')
     setQuestions(qs ?? [])
+    const { data: monthlyCount } = await supabase.rpc('get_form_monthly_submissions', { p_form_id: data.id })
+    if (typeof monthlyCount === 'number' && monthlyCount >= 10) setLimitReached(true)
     setLoading(false)
   }
 
@@ -132,6 +135,35 @@ export default function PublicForm() {
         <p style={{ fontSize: 48, marginBottom: 16 }}>🔍</p>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#0A0A0A', marginBottom: 8 }}>Formulário não encontrado</h1>
         <p style={{ color: '#64748B', fontSize: 14 }}>Este link pode estar inativo ou incorreto.</p>
+      </div>
+    </div>
+  )
+
+  if (limitReached && !isPreview) return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F8FAFC' }}>
+      <header style={{ backgroundColor: '#fff', borderBottom: '1px solid #F1F5F9', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <p style={{ fontWeight: 700, fontSize: 15, color: '#0A0A0A' }}>{form?.title}</p>
+          {form?.description && <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{form.description}</p>}
+        </div>
+        <Logo size="sm" />
+      </header>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }}>
+        <div style={{ maxWidth: 400, width: '100%', textAlign: 'center' }}>
+          <div style={{ width: 72, height: 72, backgroundColor: '#FEF3C7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 24px' }}>🔒</div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0A0A0A', marginBottom: 10 }}>Formulário temporariamente indisponível</h2>
+          <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.6, marginBottom: 28 }}>
+            Este profissional atingiu o limite do plano gratuito este mês. Tente novamente no próximo mês.
+          </p>
+          <div style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 14, padding: '20px 24px', textAlign: 'left' }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 8 }}>Para o profissional</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: '#0A0A0A', marginBottom: 4 }}>Upgrade para Pro — R$29,90/mês</p>
+            <p style={{ fontSize: 13, color: '#64748B', marginBottom: 16 }}>Orçamentos ilimitados, sem restrições.</p>
+            <a href="/login?signup=true" style={{ display: 'block', backgroundColor: '#2563EB', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 0', borderRadius: 10, textAlign: 'center', textDecoration: 'none' }}>
+              Fazer upgrade agora →
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   )

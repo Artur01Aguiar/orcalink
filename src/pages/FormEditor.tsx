@@ -49,6 +49,7 @@ export default function FormEditor() {
   const [pubLink, setPubLink] = useState('')
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const [showBadge, setShowBadge] = useState(true)
+  const [userPlan, setUserPlan] = useState<'free' | 'pro' | 'business'>('free')
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedFormIdRef = useRef<string | null>(id ?? null)
   const isSavingRef = useRef(false)
@@ -56,6 +57,13 @@ export default function FormEditor() {
   useEffect(() => {
     if (!isNew && id) loadForm(id)
   }, [id])
+
+  useEffect(() => {
+    if (!user) return
+    supabase.from('profiles').select('plan').eq('id', user.id).single().then(({ data }) => {
+      if (data?.plan) setUserPlan(data.plan as 'free' | 'pro' | 'business')
+    })
+  }, [user])
 
   async function loadForm(formId: string) {
     const { data: form } = await supabase.from('forms').select('*').eq('id', formId).single()
@@ -90,7 +98,7 @@ export default function FormEditor() {
         user_id: user.id, title, description,
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
-        show_badge: showBadge,
+        show_badge: userPlan === 'free' ? true : showBadge,
       } as Record<string, unknown>).select().single()
       if (error) { setAutoSaveStatus('idle'); isSavingRef.current = false; return }
       formId = data.id
@@ -101,7 +109,7 @@ export default function FormEditor() {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
-        show_badge: showBadge,
+        show_badge: userPlan === 'free' ? true : showBadge,
       } as Record<string, unknown>).eq('id', formId)
     }
 
@@ -169,7 +177,7 @@ export default function FormEditor() {
         user_id: user.id, title, description,
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
-        show_badge: showBadge,
+        show_badge: userPlan === 'free' ? true : showBadge,
       } as Record<string, unknown>).select().single()
       if (error) { alert('Erro: ' + error.message); setSaving(false); return }
       formId = data.id
@@ -178,7 +186,7 @@ export default function FormEditor() {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
-        show_badge: showBadge,
+        show_badge: userPlan === 'free' ? true : showBadge,
       } as Record<string, unknown>).eq('id', formId)
     }
 
@@ -344,21 +352,29 @@ export default function FormEditor() {
                 )}
 
                 {/* Badge toggle */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', backgroundColor: '#F8FAFC', borderRadius: 10, border: '1px solid #F1F5F9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', backgroundColor: '#F8FAFC', borderRadius: 10, border: '1px solid #F1F5F9', opacity: userPlan === 'free' ? 0.7 : 1 }}>
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 2 }}>Badge "Feito com OrcaLink"</p>
-                    <p style={{ fontSize: 11, color: '#94A3B8' }}>{showBadge ? 'Aparece no rodapé do formulário' : 'Oculto no formulário'}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>Badge "Feito com OrcaLink"</p>
+                      {userPlan === 'free' && (
+                        <span style={{ fontSize: 10, fontWeight: 700, backgroundColor: '#2563EB', color: '#fff', padding: '2px 7px', borderRadius: 20 }}>PRO</span>
+                      )}
+                    </div>
+                    <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>
+                      {userPlan === 'free' ? 'Ocultar badge requer plano Pro' : showBadge ? 'Aparece no rodapé do formulário' : 'Oculto no formulário'}
+                    </p>
                   </div>
                   <button
-                    onClick={() => setShowBadge(v => !v)}
+                    onClick={() => userPlan !== 'free' && setShowBadge(v => !v)}
                     style={{
-                      width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
-                      backgroundColor: showBadge ? '#2563EB' : '#CBD5E1',
+                      width: 44, height: 24, borderRadius: 12, border: 'none',
+                      cursor: userPlan === 'free' ? 'not-allowed' : 'pointer',
+                      backgroundColor: userPlan === 'free' ? '#2563EB' : showBadge ? '#2563EB' : '#CBD5E1',
                       position: 'relative', transition: 'background-color 0.2s', flexShrink: 0,
                     }}
                   >
                     <span style={{
-                      position: 'absolute', top: 3, left: showBadge ? 23 : 3,
+                      position: 'absolute', top: 3, left: (userPlan === 'free' || showBadge) ? 23 : 3,
                       width: 18, height: 18, borderRadius: '50%', backgroundColor: '#fff',
                       transition: 'left 0.2s', display: 'block',
                     }} />

@@ -12,16 +12,19 @@ export default function Dashboard() {
   const [forms, setForms] = useState<FormWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [totalSubmissions, setTotalSubmissions] = useState(0)
+  const [monthlySubmissions, setMonthlySubmissions] = useState(0)
+  const [userPlan, setUserPlan] = useState<'free' | 'pro' | 'business'>('free')
   const [copied, setCopied] = useState<string | null>(null)
 
   useEffect(() => { if (user) loadForms() }, [user])
 
   async function loadForms() {
     setLoading(true)
-    const { data } = await supabase
-      .from('forms').select('*')
-      .eq('user_id', user!.id)
-      .order('created_at', { ascending: false })
+    const [{ data }, { data: profile }] = await Promise.all([
+      supabase.from('forms').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }),
+      supabase.from('profiles').select('plan').eq('id', user!.id).single(),
+    ])
+    if (profile?.plan) setUserPlan(profile.plan as 'free' | 'pro' | 'business')
 
     if (data) {
       const withStats = await Promise.all(data.map(async f => {
@@ -31,6 +34,16 @@ export default function Dashboard() {
       }))
       setForms(withStats)
       setTotalSubmissions(withStats.reduce((a, f) => a + (f.submissions_count ?? 0), 0))
+
+      if (data.length > 0) {
+        const startOfMonth = new Date()
+        startOfMonth.setDate(1); startOfMonth.setHours(0, 0, 0, 0)
+        const { count: mCount } = await supabase
+          .from('submissions').select('*', { count: 'exact', head: true })
+          .in('form_id', data.map(f => f.id))
+          .gte('created_at', startOfMonth.toISOString())
+        setMonthlySubmissions(mCount ?? 0)
+      }
     }
     setLoading(false)
   }
@@ -52,9 +65,11 @@ export default function Dashboard() {
     setTimeout(() => setCopied(null), 2000)
   }
 
+  const isFreePlan = userPlan === 'free'
+  const canCreateForm = !isFreePlan || forms.length < 1
   const stats = [
     { label: 'Formulários ativos', value: forms.filter(f => f.active).length, color: '#2563EB' },
-    { label: 'Orçamentos este mês', value: totalSubmissions, color: '#10B981' },
+    { label: 'Orçamentos este mês', value: isFreePlan ? monthlySubmissions : totalSubmissions, color: '#10B981' },
     { label: 'Total de formulários', value: forms.length, color: '#8B5CF6' },
   ]
 
@@ -80,7 +95,12 @@ export default function Dashboard() {
             <h1 style={{ fontSize: 18, fontWeight: 700, color: '#0A0A0A' }}>Meus Formulários</h1>
             <p className="hidden sm:block" style={{ fontSize: 13, color: '#94A3B8', marginTop: 2 }}>Gerencie seus links de orçamento</p>
           </div>
-          <button className="btn-primary" style={{ fontSize: 13, padding: '9px 14px' }} onClick={() => navigate('/forms/new')}>
+          <button
+            className="btn-primary"
+            style={{ fontSize: 13, padding: '9px 14px', opacity: canCreateForm ? 1 : 0.5, cursor: canCreateForm ? 'pointer' : 'not-allowed' }}
+            onClick={() => canCreateForm ? navigate('/forms/new') : null}
+            title={canCreateForm ? undefined : 'Upgrade para Pro para criar mais formulários'}
+          >
             + Novo formulário
           </button>
         </header>
@@ -89,14 +109,32 @@ export default function Dashboard() {
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3" style={{ marginBottom: 32 }}>
-            {stats.map(s => (
+            {stats.map((s, i) => (
               <div key={s.label} className="card" style={{ padding: '20px 24px' }}>
                 <p style={{ fontSize: 36, fontWeight: 800, color: '#0A0A0A', lineHeight: 1 }}>{s.value}</p>
                 <p style={{ fontSize: 13, color: '#64748B', marginTop: 8 }}>{s.label}</p>
-                <div style={{ width: 32, height: 3, backgroundColor: s.color, borderRadius: 2, marginTop: 12 }} />
+                {isFreePlan && i === 1 ? (
+                  <div style={{ marginTop: 10 }}>
+                    <div style={{ height: 4, backgroundColor: '#F1F5F9', borderRadius: 2, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${Math.min((monthlySubmissions / 10) * 100, 100)}%`, backgroundColor: monthlySubmissions >= 10 ? '#EF4444' : monthlySubmissions >= 7 ? '#F59E0B' : '#10B981', borderRadius: 2, transition: 'width 0.3s' }} />
+                    </div>
+                    <p style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>{monthlySubmissions}/10 no plano grátis</p>
+                  </div>
+                ) : (
+                  <div style={{ width: 32, height: 3, backgroundColor: s.color, borderRadius: 2, marginTop: 12 }} />
+                )}
               </div>
             ))}
           </div>
+          {/* Upgrade nudge quando perto do limite */}
+          {isFreePlan && monthlySubmissions >= 8 && (
+            <div style={{ backgroundColor: '#FEF9C3', border: '1px solid #FDE047', borderRadius: 12, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+              <p style={{ fontSize: 13, color: '#854D0E', fontWeight: 600 }}>
+                {monthlySubmissions >= 10 ? '🔴 Limite atingido — seu formulário está bloqueado para clientes.' : `⚠️ ${10 - monthlySubmissions} orçamento${10 - monthlySubmissions === 1 ? '' : 's'} restante${10 - monthlySubmissions === 1 ? '' : 's'} este mês.`}
+              </p>
+              <a href="/login?signup=true" style={{ fontSize: 12, fontWeight: 700, color: '#2563EB', whiteSpace: 'nowrap', textDecoration: 'none' }}>Upgrade Pro →</a>
+            </div>
+          )}
 
           {/* Lista */}
           {loading ? (
