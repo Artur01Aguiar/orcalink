@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { RefreshCw, CloudUpload } from 'lucide-react'
-import { supabase, generateSlug } from '../lib/supabase'
+import { supabase, generateSlug, generateUniqueSlug } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { Sidebar } from '../components/Sidebar'
 import type { Question, QuestionOption } from '../lib/types'
@@ -90,18 +90,28 @@ export default function FormEditor() {
     if (!user || !title.trim() || isSavingRef.current) return
     isSavingRef.current = true
     setAutoSaveStatus('saving')
-    const formSlug = slug || generateSlug(title)
+    let formSlug = slug || generateSlug(title)
     let formId = savedFormIdRef.current
 
     if (!formId) {
-      const { data, error } = await supabase.from('forms').insert({
+      let { data, error } = await supabase.from('forms').insert({
         user_id: user.id, title, description,
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
         show_badge: userPlan === 'free' ? true : showBadge,
       } as Record<string, unknown>).select().single()
+      if (error?.code === '23505') {
+        formSlug = generateUniqueSlug(title)
+        const retry = await supabase.from('forms').insert({
+          user_id: user.id, title, description,
+          slug: formSlug, active: true,
+          whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+          show_badge: userPlan === 'free' ? true : showBadge,
+        } as Record<string, unknown>).select().single()
+        data = retry.data; error = retry.error
+      }
       if (error) { setAutoSaveStatus('idle'); isSavingRef.current = false; return }
-      formId = data.id
+      formId = data!.id
       savedFormIdRef.current = formId
       setSavedFormId(formId)
       setSlug(formSlug)
@@ -170,18 +180,29 @@ export default function FormEditor() {
     setSaving(true)
 
     let formId = savedFormId
-    const formSlug = slug || generateSlug(title)
+    let formSlug = slug || generateSlug(title)
 
     if (isNew || !formId) {
-      const { data, error } = await supabase.from('forms').insert({
+      let { data, error } = await supabase.from('forms').insert({
         user_id: user.id, title, description,
         slug: formSlug, active: true,
         whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
         show_badge: userPlan === 'free' ? true : showBadge,
       } as Record<string, unknown>).select().single()
+      if (error?.code === '23505') {
+        formSlug = generateUniqueSlug(title)
+        const retry = await supabase.from('forms').insert({
+          user_id: user.id, title, description,
+          slug: formSlug, active: true,
+          whatsapp_number: whatsappNumber ? phoneToWhatsApp(whatsappNumber) : null,
+          show_badge: userPlan === 'free' ? true : showBadge,
+        } as Record<string, unknown>).select().single()
+        data = retry.data; error = retry.error
+      }
       if (error) { alert('Erro: ' + error.message); setSaving(false); return }
-      formId = data.id
+      formId = data!.id
       setSavedFormId(formId)
+      setSlug(formSlug)
     } else {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
