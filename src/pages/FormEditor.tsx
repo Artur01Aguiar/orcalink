@@ -50,6 +50,11 @@ export default function FormEditor() {
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const [showBadge, setShowBadge] = useState(true)
   const [userPlan, setUserPlan] = useState<'free' | 'pro' | 'business'>('free')
+  const [slugInput, setSlugInput] = useState('')
+  const [slugStatus, setSlugStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
+  const [slugSuggestions, setSlugSuggestions] = useState<string[]>([])
+  const slugCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const slugCustomized = useRef(false)
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedFormIdRef = useRef<string | null>(id ?? null)
   const isSavingRef = useRef(false)
@@ -91,6 +96,8 @@ export default function FormEditor() {
       setTitle(form.title)
       setDescription(form.description ?? '')
       setSlug(form.slug)
+      setSlugInput(form.slug)
+      slugCustomized.current = true
       const stored = (form as unknown as Record<string, string>).whatsapp_number ?? ''
       setWhatsappNumber(stored ? whatsAppToDisplay(stored) : '')
       setShowBadge((form as unknown as Record<string, unknown>).show_badge !== false)
@@ -164,7 +171,50 @@ export default function FormEditor() {
 
   function handleTitleChange(val: string) {
     setTitle(val)
-    if (isNew) setSlug(generateSlug(val))
+    if (!slugCustomized.current) {
+      const generated = generateSlug(val)
+      setSlug(generated)
+      setSlugInput(generated)
+    }
+  }
+
+  async function checkSlug(value: string) {
+    const clean = value.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '')
+    if (!clean) return
+    setSlugStatus('checking')
+    const query = supabase.from('forms').select('id').eq('slug', clean)
+    if (savedFormIdRef.current) query.neq('id', savedFormIdRef.current)
+    const { data } = await query.limit(1)
+    if (!isMountedRef.current) return
+    if (data && data.length > 0) {
+      setSlugStatus('taken')
+      setSlugSuggestions([
+        `${clean}-2`,
+        `${clean}-${new Date().getFullYear()}`,
+        `${clean}-${Math.random().toString(36).slice(2, 5)}`,
+      ])
+    } else {
+      setSlugStatus('available')
+      setSlugSuggestions([])
+      setSlug(clean)
+      setSlugInput(clean)
+    }
+  }
+
+  function handleSlugInput(val: string) {
+    const clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '')
+    setSlugInput(clean)
+    slugCustomized.current = true
+    setSlugStatus('idle')
+    if (slugCheckTimer.current) clearTimeout(slugCheckTimer.current)
+    if (!clean) return
+    slugCheckTimer.current = setTimeout(() => checkSlug(clean), 600)
+  }
+
+  function applySuggestion(suggestion: string) {
+    setSlugInput(suggestion)
+    setSlugStatus('checking')
+    checkSlug(suggestion)
   }
 
   function addQuestion() {
@@ -385,17 +435,47 @@ export default function FormEditor() {
                     </p>
                   )}
                 </div>
-                {slug && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', backgroundColor: '#EFF6FF', borderRadius: 10, border: '1px solid #BFDBFE' }}>
-                    <span style={{ fontSize: 12, color: '#2563EB', fontWeight: 600, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {window.location.origin}/f/{slug}
+                <div>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Seu link público</label>
+                  <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${slugStatus === 'taken' ? '#FCA5A5' : slugStatus === 'available' ? '#6EE7B7' : '#E2E8F0'}`, borderRadius: 10, overflow: 'hidden', backgroundColor: '#fff' }}>
+                    <span style={{ padding: '10px 12px', backgroundColor: '#F8FAFC', borderRight: '1px solid #E2E8F0', fontSize: 12, color: '#64748B', fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      orcalinkapp.com/f/
                     </span>
-                    <button style={{ fontSize: 12, color: '#2563EB', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0 }}
-                      onClick={() => navigator.clipboard.writeText(`${window.location.origin}/f/${slug}`)}>
-                      Copiar
-                    </button>
+                    <input
+                      value={slugInput}
+                      onChange={e => handleSlugInput(e.target.value)}
+                      placeholder="meu-link"
+                      style={{ flex: 1, padding: '10px 12px', border: 'none', outline: 'none', fontSize: 13, color: '#0A0A0A', fontWeight: 600, minWidth: 0 }}
+                    />
+                    <span style={{ padding: '0 12px', fontSize: 16, flexShrink: 0 }}>
+                      {slugStatus === 'checking' && <span className="spin" style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid #CBD5E1', borderTopColor: '#2563EB', borderRadius: '50%' }} />}
+                      {slugStatus === 'available' && <span style={{ color: '#10B981' }}>✓</span>}
+                      {slugStatus === 'taken' && <span style={{ color: '#EF4444' }}>✗</span>}
+                    </span>
                   </div>
-                )}
+                  {slugStatus === 'available' && (
+                    <p style={{ fontSize: 11, color: '#10B981', fontWeight: 600, marginTop: 4 }}>Link disponível!</p>
+                  )}
+                  {slugStatus === 'taken' && (
+                    <div style={{ marginTop: 6 }}>
+                      <p style={{ fontSize: 11, color: '#EF4444', fontWeight: 600, marginBottom: 4 }}>Já existe. Tente:</p>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {slugSuggestions.map(s => (
+                          <button key={s} onClick={() => applySuggestion(s)}
+                            style={{ fontSize: 11, color: '#2563EB', fontWeight: 600, backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 6, padding: '3px 8px', cursor: 'pointer' }}>
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {slug && slugStatus !== 'taken' && (
+                    <button style={{ fontSize: 11, color: '#94A3B8', background: 'none', border: 'none', cursor: 'pointer', marginTop: 4, padding: 0 }}
+                      onClick={() => navigator.clipboard.writeText(`${window.location.origin}/f/${slug}`)}>
+                      Copiar link completo
+                    </button>
+                  )}
+                </div>
 
                 {/* Badge toggle */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', backgroundColor: '#F8FAFC', borderRadius: 10, border: '1px solid #F1F5F9', opacity: userPlan === 'free' ? 0.7 : 1 }}>
