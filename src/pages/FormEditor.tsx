@@ -53,6 +53,8 @@ export default function FormEditor() {
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedFormIdRef = useRef<string | null>(id ?? null)
   const isSavingRef = useRef(false)
+  const isMountedRef = useRef(true)
+  useEffect(() => () => { isMountedRef.current = false }, [])
 
   useEffect(() => {
     if (!isNew && id) loadForm(id)
@@ -64,6 +66,24 @@ export default function FormEditor() {
       if (data?.plan) setUserPlan(data.plan as 'free' | 'pro' | 'business')
     })
   }, [user])
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (autoSaveStatus === 'saving' || (autoSaveStatus === 'idle' && title.trim())) {
+        e.preventDefault()
+      }
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [autoSaveStatus, title])
+
+  async function handleBack() {
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current)
+      await performAutoSave()
+    }
+    navigate('/dashboard')
+  }
 
   async function loadForm(formId: string) {
     const { data: form } = await supabase.from('forms').select('*').eq('id', formId).single()
@@ -82,8 +102,7 @@ export default function FormEditor() {
   useEffect(() => {
     if (!title.trim() || !user) return
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
-    autoSaveTimer.current = setTimeout(() => performAutoSave(), 1500)
-    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current) }
+    autoSaveTimer.current = setTimeout(() => performAutoSave(), 800)
   }, [title, description, whatsappNumber, questions, showBadge])
 
   async function performAutoSave() {
@@ -110,11 +129,14 @@ export default function FormEditor() {
         } as Record<string, unknown>).select().single()
         data = retry.data; error = retry.error
       }
-      if (error) { setAutoSaveStatus('idle'); isSavingRef.current = false; return }
+      if (error) { if (isMountedRef.current) setAutoSaveStatus('idle'); isSavingRef.current = false; return }
       formId = data!.id
       savedFormIdRef.current = formId
-      setSavedFormId(formId)
-      setSlug(formSlug)
+      if (isMountedRef.current) {
+        setSavedFormId(formId)
+        setSlug(formSlug)
+        navigate(`/forms/${formId}`, { replace: true })
+      }
     } else {
       await supabase.from('forms').update({
         title, description, slug: formSlug,
@@ -133,7 +155,7 @@ export default function FormEditor() {
         }))
       )
     }
-    setAutoSaveStatus('saved')
+    if (isMountedRef.current) setAutoSaveStatus('saved')
     isSavingRef.current = false
   }
 
@@ -296,7 +318,7 @@ export default function FormEditor() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
             <button className="btn-ghost" style={{ padding: '8px 12px', fontSize: 13, flexShrink: 0 }}
-              onClick={() => navigate('/dashboard')}>← Voltar</button>
+              onClick={handleBack}>← Voltar</button>
             <div className="hidden sm:block" style={{ minWidth: 0 }}>
               <p style={{ fontSize: 15, fontWeight: 600, color: '#0A0A0A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {isNew ? 'Novo formulário' : title || 'Editar formulário'}
