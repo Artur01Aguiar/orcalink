@@ -156,6 +156,7 @@ textarea.input { resize: vertical; min-height: 80px; }
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 1s linear infinite; }
 
 /* Sidebar nav */
 .nav-item {

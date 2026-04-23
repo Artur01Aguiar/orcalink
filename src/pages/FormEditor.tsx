@@ -155,7 +155,10 @@ export default function FormEditor() {
         }))
       )
     }
-    if (isMountedRef.current) setAutoSaveStatus('saved')
+    if (isMountedRef.current) {
+      setAutoSaveStatus('saved')
+      setTimeout(() => { if (isMountedRef.current) setAutoSaveStatus('idle') }, 2000)
+    }
     isSavingRef.current = false
   }
 
@@ -328,7 +331,7 @@ export default function FormEditor() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             {autoSaveStatus === 'saving' && (
-              <RefreshCw size={16} color="#CBD5E1" style={{ animation: 'spin 1s linear infinite' }} />
+              <RefreshCw size={16} color="#CBD5E1" className="spin" />
             )}
             {autoSaveStatus === 'saved' && (
               <CloudUpload size={18} color="#10B981" />
