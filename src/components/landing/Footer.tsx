@@ -3,7 +3,6 @@ import { Mail, Instagram, Phone } from 'lucide-react'
 const navLinks = [
   { label: 'Como funciona', href: '#como-funciona' },
   { label: 'Preços', href: '#precos' },
-  { label: 'Blog', href: '#' },
   { label: 'Termos de Uso', href: '#' },
   { label: 'Privacidade', href: '#' },
 ]
@@ -83,30 +82,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Made with love */}
-          <div className="flex flex-col gap-4">
-            <p className="text-xs font-heading font-semibold text-white/40 uppercase tracking-widest">
-              Origem
-            </p>
-            <p className="text-sm text-white/60 leading-relaxed">
-              Feito com ❤️ em Recife, Brasil.
-            </p>
-            <a
-              href="#precos"
-              className="inline-flex items-center justify-center bg-primary hover:bg-blue-600 text-white text-sm font-heading font-bold px-5 py-2.5 rounded-xl transition-colors self-start"
-            >
-              Criar conta grátis →
-            </a>
-          </div>
         </div>
 
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-white/40">
             © 2026 OrcaLink. Todos os direitos reservados.
-          </p>
-          <p className="text-xs text-white/30">
-            CNPJ: Em registro · Recife, PE · Brasil
           </p>
         </div>
       </div>
