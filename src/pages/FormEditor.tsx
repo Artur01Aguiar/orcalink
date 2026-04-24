@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { RefreshCw, CloudUpload } from 'lucide-react'
 import { supabase, generateSlug, generateUniqueSlug } from '../lib/supabase'
+import { startProCheckout } from '../lib/stripe'
 import { useAuth } from '../contexts/AuthContext'
 import { Sidebar } from '../components/Sidebar'
 import type { Question, QuestionOption } from '../lib/types'
@@ -483,7 +484,7 @@ export default function FormEditor() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <p style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>Badge "Feito com OrcaLink"</p>
                       {userPlan === 'free' && (
-                        <span style={{ fontSize: 10, fontWeight: 700, backgroundColor: '#2563EB', color: '#fff', padding: '2px 7px', borderRadius: 20 }}>PRO</span>
+                        <span onClick={startProCheckout} style={{ fontSize: 10, fontWeight: 700, backgroundColor: '#2563EB', color: '#fff', padding: '2px 7px', borderRadius: 20, cursor: 'pointer' }}>PRO</span>
                       )}
                     </div>
                     <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>

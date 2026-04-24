@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [monthlySubmissions, setMonthlySubmissions] = useState(0)
   const [userPlan, setUserPlan] = useState<'free' | 'pro' | 'business'>('free')
   const [copied, setCopied] = useState<string | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   useEffect(() => { if (user) loadForms() }, [user])
 
@@ -99,7 +100,7 @@ export default function Dashboard() {
           <button
             className="btn-primary"
             style={{ fontSize: 13, padding: '9px 14px', opacity: canCreateForm ? 1 : 0.5, cursor: canCreateForm ? 'pointer' : 'not-allowed' }}
-            onClick={() => canCreateForm ? navigate('/forms/new') : null}
+            onClick={() => canCreateForm ? navigate('/forms/new') : setShowUpgradeModal(true)}
             title={canCreateForm ? undefined : 'Upgrade para Pro para criar mais formulários'}
           >
             + Novo formulário
@@ -127,13 +128,47 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-          {/* Upgrade nudge quando perto do limite */}
-          {isFreePlan && monthlySubmissions >= 8 && (
-            <div style={{ backgroundColor: '#FEF9C3', border: '1px solid #FDE047', borderRadius: 12, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-              <p style={{ fontSize: 13, color: '#854D0E', fontWeight: 600 }}>
-                {monthlySubmissions >= 10 ? '🔴 Limite atingido — seu formulário está bloqueado para clientes.' : `⚠️ ${10 - monthlySubmissions} orçamento${10 - monthlySubmissions === 1 ? '' : 's'} restante${10 - monthlySubmissions === 1 ? '' : 's'} este mês.`}
-              </p>
-              <button onClick={startProCheckout} style={{ fontSize: 12, fontWeight: 700, color: '#2563EB', whiteSpace: 'nowrap', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Upgrade Pro →</button>
+          {/* Card de plano — sempre visível para free */}
+          {isFreePlan && (
+            <div style={{
+              borderRadius: 16, marginBottom: 20, overflow: 'hidden',
+              border: '1px solid #BFDBFE',
+              background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%)',
+            }}>
+              <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#1D4ED8' }}>Plano Grátis</span>
+                    {monthlySubmissions >= 10 && (
+                      <span style={{ fontSize: 10, backgroundColor: '#FEE2E2', color: '#EF4444', padding: '2px 7px', borderRadius: 20, fontWeight: 700 }}>LIMITE ATINGIDO</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ flex: 1, height: 6, backgroundColor: '#BFDBFE', borderRadius: 3, overflow: 'hidden', maxWidth: 180 }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${Math.min((monthlySubmissions / 10) * 100, 100)}%`,
+                        backgroundColor: monthlySubmissions >= 10 ? '#EF4444' : monthlySubmissions >= 7 ? '#F59E0B' : '#2563EB',
+                        borderRadius: 3, transition: 'width 0.4s',
+                      }} />
+                    </div>
+                    <span style={{ fontSize: 12, color: '#3B82F6', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                      {monthlySubmissions}/10 orçamentos
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={startProCheckout}
+                  style={{
+                    backgroundColor: '#2563EB', color: '#fff', border: 'none', borderRadius: 10,
+                    padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                    whiteSpace: 'nowrap', flexShrink: 0,
+                    boxShadow: '0 2px 8px rgba(37,99,235,0.35)',
+                  }}
+                >
+                  ⚡ Upgrade Pro — R$29,90/mês
+                </button>
+              </div>
             </div>
           )}
 
@@ -261,6 +296,93 @@ export default function Dashboard() {
           )}
         </div>
       </main>
+
+      {/* Modal upgrade — plano grátis tentando criar 2º formulário */}
+      {showUpgradeModal && (
+        <div
+          onClick={() => setShowUpgradeModal(false)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 100,
+            backgroundColor: 'rgba(0,0,0,0.45)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '16px',
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              backgroundColor: '#fff', borderRadius: 20, width: '100%', maxWidth: 440,
+              overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.2)',
+            }}
+          >
+            {/* Header */}
+            <div style={{
+              background: 'linear-gradient(135deg, #1e3a8a 0%, #2563EB 100%)',
+              padding: '28px 28px 24px',
+              position: 'relative',
+            }}>
+              <button
+                onClick={() => setShowUpgradeModal(false)}
+                style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '50%', width: 28, height: 28, color: '#fff', cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >×</button>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 8 }}>Limite atingido</p>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
+                Plano Grátis: 1 formulário
+              </h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>
+                Faça upgrade para criar formulários ilimitados e remover o badge OrcaLink.
+              </p>
+            </div>
+
+            {/* Planos */}
+            <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+              {/* Pro */}
+              <div style={{ border: '2px solid #2563EB', borderRadius: 14, padding: '18px 20px', position: 'relative', backgroundColor: '#EFF6FF' }}>
+                <span style={{ position: 'absolute', top: -10, left: 20, backgroundColor: '#2563EB', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Mais popular</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <div>
+                    <p style={{ fontSize: 16, fontWeight: 800, color: '#0A0A0A' }}>Pro</p>
+                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>Para autônomos que querem crescer</p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontSize: 22, fontWeight: 800, color: '#2563EB' }}>R$29,90</p>
+                    <p style={{ fontSize: 11, color: '#94A3B8' }}>/mês</p>
+                  </div>
+                </div>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {['Formulários ilimitados', 'Orçamentos ilimitados', 'Sem badge OrcaLink', 'Analytics de respostas'].map(f => (
+                    <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#374151' }}>
+                      <span style={{ color: '#10B981', fontWeight: 700 }}>✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => { setShowUpgradeModal(false); startProCheckout() }}
+                  style={{
+                    width: '100%', padding: '12px 0', borderRadius: 10, border: 'none',
+                    backgroundColor: '#2563EB', color: '#fff', fontSize: 14, fontWeight: 700,
+                    cursor: 'pointer', boxShadow: '0 4px 12px rgba(37,99,235,0.35)',
+                  }}
+                >
+                  ⚡ Assinar Pro — R$29,90/mês
+                </button>
+              </div>
+
+              {/* Free atual */}
+              <div style={{ border: '1px solid #E2E8F0', borderRadius: 14, padding: '14px 20px', backgroundColor: '#F8FAFC' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: '#64748B' }}>Grátis (atual)</p>
+                    <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>1 formulário · 10 orçamentos/mês · com badge</p>
+                  </div>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: '#94A3B8' }}>R$0</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
