@@ -8,6 +8,7 @@ import FormEditor from './pages/FormEditor'
 import Respostas from './pages/Respostas'
 import PublicForm from './pages/PublicForm'
 import Confirmation from './pages/Confirmation'
+import UpgradeSuccess from './pages/UpgradeSuccess'
 
 export default function App() {
   return (
@@ -28,6 +29,10 @@ export default function App() {
           } />
           <Route path="/respostas" element={
             <PrivateRoute><Respostas /></PrivateRoute>
+          } />
+
+          <Route path="/upgrade/sucesso" element={
+            <PrivateRoute><UpgradeSuccess /></PrivateRoute>
           } />
 
           <Route path="/f/:slug" element={<PublicForm />} />

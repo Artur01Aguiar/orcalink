@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Copy, Check, Pencil, Pause, Play, Trash2 } from 'lucide-react'
+import { startProCheckout } from '../lib/stripe'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { Sidebar } from '../components/Sidebar'
@@ -132,7 +133,7 @@ export default function Dashboard() {
               <p style={{ fontSize: 13, color: '#854D0E', fontWeight: 600 }}>
                 {monthlySubmissions >= 10 ? '🔴 Limite atingido — seu formulário está bloqueado para clientes.' : `⚠️ ${10 - monthlySubmissions} orçamento${10 - monthlySubmissions === 1 ? '' : 's'} restante${10 - monthlySubmissions === 1 ? '' : 's'} este mês.`}
               </p>
-              <a href="/login?signup=true" style={{ fontSize: 12, fontWeight: 700, color: '#2563EB', whiteSpace: 'nowrap', textDecoration: 'none' }}>Upgrade Pro →</a>
+              <button onClick={startProCheckout} style={{ fontSize: 12, fontWeight: 700, color: '#2563EB', whiteSpace: 'nowrap', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Upgrade Pro →</button>
             </div>
           )}
 

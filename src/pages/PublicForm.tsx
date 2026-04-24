@@ -159,7 +159,7 @@ export default function PublicForm() {
             <p style={{ fontSize: 11, fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 8 }}>Para o profissional</p>
             <p style={{ fontSize: 14, fontWeight: 700, color: '#0A0A0A', marginBottom: 4 }}>Upgrade para Pro — R$29,90/mês</p>
             <p style={{ fontSize: 13, color: '#64748B', marginBottom: 16 }}>Orçamentos ilimitados, sem restrições.</p>
-            <a href="/login?signup=true" style={{ display: 'block', backgroundColor: '#2563EB', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 0', borderRadius: 10, textAlign: 'center', textDecoration: 'none' }}>
+            <a href="https://orcalinkapp.com/login?signup=true" style={{ display: 'block', backgroundColor: '#2563EB', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 0', borderRadius: 10, textAlign: 'center', textDecoration: 'none' }}>
               Fazer upgrade agora →
             </a>
           </div>
