@@ -1,4 +1,4 @@
-import { Mail, Instagram } from 'lucide-react'
+import { Mail, Instagram, Phone } from 'lucide-react'
 
 const navLinks = [
   { label: 'Como funciona', href: '#como-funciona' },
@@ -53,16 +53,27 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="mailto:contato@orcalink.com.br"
+                  href="mailto:orcalink.app@gmail.com"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Mail size={14} />
-                  contato@orcalink.com.br
+                  orcalink.app@gmail.com
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="https://wa.me/5511528681090"
+                  target="_blank" rel="noreferrer"
+                  className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+                >
+                  <Phone size={14} />
+                  +55 11 5286-8190
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/orcalink.app/"
+                  target="_blank" rel="noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Instagram size={14} />
