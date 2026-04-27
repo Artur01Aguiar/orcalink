@@ -9,6 +9,7 @@ import Respostas from './pages/Respostas'
 import PublicForm from './pages/PublicForm'
 import Confirmation from './pages/Confirmation'
 import UpgradeSuccess from './pages/UpgradeSuccess'
+import ResetPassword from './pages/ResetPassword'
 
 export default function App() {
   return (
@@ -34,6 +35,8 @@ export default function App() {
           <Route path="/upgrade/sucesso" element={
             <PrivateRoute><UpgradeSuccess /></PrivateRoute>
           } />
+
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="/f/:slug" element={<PublicForm />} />
           <Route path="/f/:slug/obrigado" element={<Confirmation />} />
