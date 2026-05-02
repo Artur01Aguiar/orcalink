@@ -15,6 +15,7 @@ import ResetPassword from './pages/ResetPassword'
 import AffiliateLanding from './pages/AffiliateLanding'
 import AffiliateDashboard from './pages/AffiliateDashboard'
 import PartnerInvite from './pages/PartnerInvite'
+import AdminInvites from './pages/AdminInvites'
 
 export default function App() {
   useEffect(() => { captureRefFromUrl() }, [])
@@ -43,6 +44,9 @@ export default function App() {
           } />
 
           <Route path="/p/:slug" element={<PartnerInvite />} />
+          <Route path="/admin/convites" element={
+            <PrivateRoute><AdminInvites /></PrivateRoute>
+          } />
           <Route path="/afiliados" element={<AffiliateLanding />} />
           <Route path="/dashboard/afiliados" element={
             <PrivateRoute><AffiliateDashboard /></PrivateRoute>
