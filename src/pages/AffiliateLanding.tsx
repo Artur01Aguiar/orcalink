@@ -38,7 +38,7 @@ export default function AffiliateLanding() {
               Ganhe indicando a OrcaLink
             </h1>
             <p style={{ fontSize: 17, color: '#64748B', maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.55 }}>
-              Compartilhe seu link, alguém assina o Pro e você recebe <strong>R$8,97</strong> por conversão.
+              Compartilhe seu link, alguém assina o Pro e você recebe <strong>R$20,93</strong> (70% do primeiro mês).
               Pago via PIX. Sem burocracia.
             </p>
             <button onClick={handleCTA} className="btn-primary" style={{ fontSize: 15, padding: '14px 32px' }}>
@@ -60,7 +60,7 @@ export default function AffiliateLanding() {
               {[
                 { n: 1, t: 'Pegue seu link', d: 'Crie sua conta grátis e gere seu link de afiliado em 1 clique.' },
                 { n: 2, t: 'Compartilhe', d: 'Mande pra fotógrafos, designers, tatuadores — qualquer autônomo.' },
-                { n: 3, t: 'Receba R$8,97', d: 'Cada vez que alguém assina o Pro pelo seu link, você ganha.' },
+                { n: 3, t: 'Receba R$20,93', d: 'Cada vez que alguém assina o Pro pelo seu link, você ganha (primeiro mês).' },
               ].map(s => (
                 <div key={s.n} className="card" style={{ padding: '28px 24px', textAlign: 'center' }}>
                   <div style={{
@@ -85,14 +85,14 @@ export default function AffiliateLanding() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-4" style={{ textAlign: 'left' }}>
               <div className="card" style={{ padding: '22px 24px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 6 }}>Plano Pro</p>
-                <p style={{ fontSize: 32, fontWeight: 800, color: '#2563EB' }}>R$8,97</p>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>por cada novo assinante (30% do primeiro mês)</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 6 }}>Open</p>
+                <p style={{ fontSize: 32, fontWeight: 800, color: '#2563EB' }}>R$20,93</p>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>70% do primeiro mês — pagamento único por cliente.</p>
               </div>
               <div className="card" style={{ padding: '22px 24px', border: '1.5px solid #BFDBFE', backgroundColor: '#F0F9FF' }}>
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 6 }}>Partner (convite)</p>
-                <p style={{ fontSize: 32, fontWeight: 800, color: '#1D4ED8' }}>R$14,95 + Pro grátis</p>
-                <p style={{ fontSize: 13, color: '#3B82F6', marginTop: 4 }}>50% por conversão e plano Pro liberado.</p>
+                <p style={{ fontSize: 32, fontWeight: 800, color: '#1D4ED8' }}>R$14,95/mês + Pro grátis</p>
+                <p style={{ fontSize: 13, color: '#3B82F6', marginTop: 4 }}>50% recorrente — todo mês enquanto o cliente continuar pagando.</p>
               </div>
             </div>
             <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 16 }}>

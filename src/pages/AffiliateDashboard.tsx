@@ -66,10 +66,10 @@ export default function AffiliateDashboard() {
                 <Award size={28} color="#2563EB" />
               </div>
               <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0A0A0A', marginBottom: 8 }}>
-                Ganhe R$8,97 por cliente que indicar
+                Ganhe R$20,93 por cliente que indicar
               </h2>
               <p style={{ fontSize: 14, color: '#64748B', maxWidth: 460, margin: '0 auto 28px', lineHeight: 1.6 }}>
-                Compartilhe seu link, alguém assina o Pro e você recebe 30% da primeira mensalidade.
+                Compartilhe seu link, alguém assina o Pro e você recebe 70% da primeira mensalidade.
                 Saque via PIX quando quiser.
               </p>
               <button onClick={handleRegister} disabled={registering} className="btn-primary" style={{ fontSize: 15, padding: '12px 28px' }}>
@@ -91,7 +91,7 @@ export default function AffiliateDashboard() {
                   </div>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>
                     Você tem Pro grátis enquanto trouxer pelo menos 1 conversão a cada 60 dias.
-                    Comissão: <strong>R$14,95</strong> (50%) por assinatura.
+                    Comissão: <strong>R$14,95/mês</strong> (50%) recorrente — enquanto o cliente continuar pagando.
                     {partnerExpires && (
                       <> Próxima revisão: <strong>{partnerExpires}</strong>.</>
                     )}
@@ -122,8 +122,8 @@ export default function AffiliateDashboard() {
                   </button>
                 </div>
                 <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 10 }}>
-                  Comissão por conversão: <strong style={{ color: '#0A0A0A' }}>R$ {stats.commission_value.toFixed(2).replace('.', ',')}</strong>
-                  {' '}({isPartner ? '50%' : '30%'} do primeiro mês)
+                  Comissão: <strong style={{ color: '#0A0A0A' }}>R$ {stats.commission_value.toFixed(2).replace('.', ',')}</strong>
+                  {' '}{isPartner ? '(50% recorrente — todo mês enquanto o cliente pagar)' : '(70% — só primeiro mês)'}
                 </p>
               </div>
 
