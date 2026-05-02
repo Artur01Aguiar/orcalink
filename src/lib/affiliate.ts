@@ -101,3 +101,26 @@ export async function registerAsAffiliate(tier: 'open' | 'partner' = 'open'): Pr
   if (error) { console.error(error); return null }
   return data as string
 }
+
+export type PartnerInvite = {
+  slug: string
+  label: string | null
+  max_uses: number
+  uses_count: number
+  active: boolean
+  created_at: string
+}
+
+export async function createPartnerInvite(slug: string, label: string | null, maxUses: number): Promise<{ slug?: string; error?: string }> {
+  const { data, error } = await supabase.rpc('create_partner_invite', {
+    p_slug: slug, p_label: label, p_max_uses: maxUses,
+  })
+  if (error) return { error: error.message }
+  return { slug: data as string }
+}
+
+export async function listMyPartnerInvites(): Promise<PartnerInvite[]> {
+  const { data, error } = await supabase.rpc('list_my_partner_invites')
+  if (error) { console.error(error); return [] }
+  return (data as PartnerInvite[]) ?? []
+}

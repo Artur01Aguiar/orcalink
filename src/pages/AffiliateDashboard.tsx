@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react'
-import { Copy, Check, Award } from 'lucide-react'
+import { Copy, Check, Award, Plus } from 'lucide-react'
 import { Sidebar } from '../components/Sidebar'
-import { getMyAffiliateStats, registerAsAffiliate } from '../lib/affiliate'
-import type { AffiliateStats } from '../lib/affiliate'
+import { getMyAffiliateStats, registerAsAffiliate, listMyPartnerInvites, createPartnerInvite } from '../lib/affiliate'
+import type { AffiliateStats, PartnerInvite } from '../lib/affiliate'
 
 export default function AffiliateDashboard() {
   const [stats, setStats] = useState<AffiliateStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [registering, setRegistering] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [invites, setInvites] = useState<PartnerInvite[]>([])
+  const [newSlug, setNewSlug] = useState('')
+  const [newLabel, setNewLabel] = useState('')
+  const [newMaxUses, setNewMaxUses] = useState(1)
+  const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
+  const [copiedInvite, setCopiedInvite] = useState<string | null>(null)
 
   useEffect(() => { load() }, [])
 
@@ -16,7 +23,31 @@ export default function AffiliateDashboard() {
     setLoading(true)
     const s = await getMyAffiliateStats()
     setStats(s)
+    if (s) {
+      const inv = await listMyPartnerInvites()
+      setInvites(inv)
+    }
     setLoading(false)
+  }
+
+  async function handleCreateInvite() {
+    if (!newSlug.trim()) return
+    setCreating(true)
+    setCreateError(null)
+    const result = await createPartnerInvite(newSlug.trim(), newLabel.trim() || null, newMaxUses)
+    if (result.error) setCreateError(result.error)
+    else {
+      setNewSlug(''); setNewLabel(''); setNewMaxUses(1)
+      const inv = await listMyPartnerInvites()
+      setInvites(inv)
+    }
+    setCreating(false)
+  }
+
+  function copyInviteLink(slug: string) {
+    navigator.clipboard.writeText(`${window.location.origin}/p/${slug}`)
+    setCopiedInvite(slug)
+    setTimeout(() => setCopiedInvite(null), 2000)
   }
 
   async function handleRegister() {
@@ -141,6 +172,108 @@ export default function AffiliateDashboard() {
                     <div style={{ width: 28, height: 3, backgroundColor: s.color, borderRadius: 2, marginTop: 10 }} />
                   </div>
                 ))}
+              </div>
+
+              {/* Convites Partner */}
+              <div className="card" style={{ padding: '20px 24px', marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                      Convites Partner
+                    </p>
+                    <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>
+                      Crie links personalizados que dão Pro grátis + tier partner para quem se cadastrar.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Form criar */}
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+                  <div style={{ flex: 2, minWidth: 180 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #E2E8F0', borderRadius: 10, overflow: 'hidden', backgroundColor: '#fff' }}>
+                      <span style={{ padding: '10px 12px', backgroundColor: '#F8FAFC', borderRight: '1px solid #E2E8F0', fontSize: 12, color: '#64748B', whiteSpace: 'nowrap' }}>
+                        /p/
+                      </span>
+                      <input
+                        value={newSlug}
+                        onChange={e => setNewSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                        placeholder="joao"
+                        style={{ flex: 1, padding: '10px 12px', border: 'none', outline: 'none', fontSize: 13, color: '#0A0A0A', fontWeight: 600, minWidth: 0 }}
+                      />
+                    </div>
+                  </div>
+                  <input
+                    value={newLabel}
+                    onChange={e => setNewLabel(e.target.value)}
+                    placeholder="Nome (opcional)"
+                    className="input"
+                    style={{ flex: 2, minWidth: 140 }}
+                  />
+                  <input
+                    type="number" min={1}
+                    value={newMaxUses}
+                    onChange={e => setNewMaxUses(Math.max(1, Number(e.target.value)))}
+                    className="input"
+                    style={{ width: 90 }}
+                    title="Máximo de usos"
+                  />
+                  <button
+                    onClick={handleCreateInvite}
+                    disabled={creating || !newSlug.trim()}
+                    className="btn-primary"
+                    style={{ padding: '10px 16px', fontSize: 13, gap: 6, opacity: (!newSlug.trim() || creating) ? 0.5 : 1 }}
+                  >
+                    <Plus size={14} /> {creating ? 'Criando...' : 'Criar'}
+                  </button>
+                </div>
+
+                {createError && (
+                  <p style={{ fontSize: 12, color: '#EF4444', marginBottom: 10 }}>{createError}</p>
+                )}
+
+                {/* Lista de convites */}
+                {invites.length === 0 ? (
+                  <p style={{ fontSize: 12, color: '#94A3B8', fontStyle: 'italic', textAlign: 'center', padding: '14px 0' }}>
+                    Nenhum convite criado ainda.
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {invites.map(inv => {
+                      const exhausted = inv.uses_count >= inv.max_uses
+                      return (
+                        <div key={inv.slug} style={{
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          padding: '10px 12px', backgroundColor: '#F8FAFC',
+                          border: '1px solid #F1F5F9', borderRadius: 10,
+                          opacity: exhausted ? 0.6 : 1,
+                        }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 13, fontWeight: 600, color: '#0A0A0A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {window.location.origin}/p/{inv.slug}
+                            </p>
+                            <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>
+                              {inv.label && <>{inv.label} · </>}
+                              {inv.uses_count}/{inv.max_uses} usos {exhausted && '· esgotado'}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => copyInviteLink(inv.slug)}
+                            disabled={exhausted}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 5,
+                              padding: '7px 12px', border: '1px solid #E2E8F0', borderRadius: 8,
+                              background: '#fff', cursor: exhausted ? 'not-allowed' : 'pointer',
+                              color: copiedInvite === inv.slug ? '#10B981' : '#64748B',
+                              fontSize: 12, fontWeight: 600, flexShrink: 0,
+                            }}
+                          >
+                            {copiedInvite === inv.slug ? <><Check size={13} /> Copiado</> : <><Copy size={13} /> Copiar</>}
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Saque */}
