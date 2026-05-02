@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
+import { applyReferralOnSignup } from '../lib/affiliate'
 
 interface AuthContextType {
   session: Session | null
@@ -27,8 +28,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
+      if (event === 'SIGNED_IN' && session?.user) {
+        // Aplica referência (cookie) no primeiro login do usuário recém-criado.
+        // set_referrer é idempotente: não sobrescreve se já tiver referrer.
+        applyReferralOnSignup().catch(() => {})
+      }
     })
 
     return () => subscription.unsubscribe()

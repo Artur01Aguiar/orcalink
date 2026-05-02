@@ -8,6 +8,7 @@ import { startProCheckout } from '../lib/stripe'
 const navItems = [
   { to: '/dashboard', label: 'Formulários', icon: '⊞' },
   { to: '/respostas', label: 'Respostas', icon: '☰' },
+  { to: '/dashboard/afiliados', label: 'Afiliados', icon: '★' },
 ]
 
 export function Sidebar() {

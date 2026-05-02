@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { PrivateRoute } from './components/PrivateRoute'
+import { captureRefFromUrl } from './lib/affiliate'
 import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -10,8 +12,11 @@ import PublicForm from './pages/PublicForm'
 import Confirmation from './pages/Confirmation'
 import UpgradeSuccess from './pages/UpgradeSuccess'
 import ResetPassword from './pages/ResetPassword'
+import AffiliateLanding from './pages/AffiliateLanding'
+import AffiliateDashboard from './pages/AffiliateDashboard'
 
 export default function App() {
+  useEffect(() => { captureRefFromUrl() }, [])
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -34,6 +39,11 @@ export default function App() {
 
           <Route path="/upgrade/sucesso" element={
             <PrivateRoute><UpgradeSuccess /></PrivateRoute>
+          } />
+
+          <Route path="/afiliados" element={<AffiliateLanding />} />
+          <Route path="/dashboard/afiliados" element={
+            <PrivateRoute><AffiliateDashboard /></PrivateRoute>
           } />
 
           <Route path="/reset-password" element={<ResetPassword />} />
