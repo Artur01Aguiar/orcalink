@@ -108,16 +108,25 @@ export default function Confirmation() {
 
           {/* Badge OrcaLink */}
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '6px 14px',
-              backgroundColor: '#EFF6FF',
-              border: '1px solid #BFDBFE',
-              borderRadius: 20,
-              fontSize: 12, color: '#2563EB', fontWeight: 600,
-            }}>
+            <a
+              href={`${window.location.origin}/login?signup=true`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '6px 14px',
+                backgroundColor: '#EFF6FF',
+                border: '1px solid #BFDBFE',
+                borderRadius: 20,
+                fontSize: 12, color: '#2563EB', fontWeight: 600,
+                textDecoration: 'none', cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+              onMouseOver={e => { e.currentTarget.style.backgroundColor = '#DBEAFE'; e.currentTarget.style.borderColor = '#93C5FD' }}
+              onMouseOut={e => { e.currentTarget.style.backgroundColor = '#EFF6FF'; e.currentTarget.style.borderColor = '#BFDBFE' }}
+            >
               ⚡ Feito com OrcaLink
-            </div>
+            </a>
           </div>
         </div>
       </div>
