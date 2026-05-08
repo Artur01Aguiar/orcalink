@@ -1,14 +1,173 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563EB'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='18' fill='white'>O</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <!-- Primary SEO -->
     <title>OrcaLink — Seu cliente calcula o orçamento. Você fecha.</title>
     <meta name="description" content="Crie um link com seu cardápio de serviços. Seu cliente abre, escolhe o que quer e já vê o valor — sem te mandar mensagem." />
+    <meta name="keywords" content="calculadora de orçamento, orçamento online, link de orçamento, orçamento automático, link na bio fotógrafo, link na bio designer, ferramenta de orçamento, MEI, freelancer, autônomo, tabela de preços, como cobrar, precificação serviço, orçamento fotógrafo, orçamento tatuador, orçamento designer" />
+    <meta name="author" content="OrcaLink" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href="https://orcalinkapp.com/" />
+
+    <!-- Favicon (mantém o oficial em produção) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563EB'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='18' fill='white'>O</text></svg>" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="OrcaLink" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="https://orcalinkapp.com/" />
+    <meta property="og:title" content="OrcaLink — Calculadora de Orçamento Online" />
+    <meta property="og:description" content="Seu cliente calcula o orçamento sozinho e fecha — sem você responder mensagem. Grátis pra começar." />
+    <meta property="og:image" content="https://orcalinkapp.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="OrcaLink — Calculadora de orçamento online para autônomos brasileiros" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="OrcaLink — Calculadora de Orçamento Online" />
+    <meta name="twitter:description" content="Cliente calcula. Você fecha. Sem WhatsApp." />
+    <meta name="twitter:image" content="https://orcalinkapp.com/og-image.png" />
+    <meta name="twitter:image:alt" content="OrcaLink — Calculadora de orçamento" />
+
+    <!-- Preconnect / Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Schema.org: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "OrcaLink",
+      "alternateName": "Orca Link",
+      "description": "Calculadora de orçamento online: crie um link onde seu cliente escolhe o serviço e vê o preço na hora, sem precisar responder no WhatsApp.",
+      "url": "https://orcalinkapp.com/",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Quote Calculator",
+      "operatingSystem": "Web",
+      "inLanguage": "pt-BR",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Grátis",
+          "price": "0",
+          "priceCurrency": "BRL",
+          "description": "1 formulário, 30 orçamentos/mês, badge OrcaLink"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro",
+          "price": "29.90",
+          "priceCurrency": "BRL",
+          "description": "Formulários e orçamentos ilimitados, sem badge"
+        },
+        {
+          "@type": "Offer",
+          "name": "Business",
+          "price": "59.90",
+          "priceCurrency": "BRL",
+          "description": "Tudo do Pro mais domínio customizado e múltiplos profissionais"
+        }
+      ],
+      "creator": {
+        "@type": "Organization",
+        "name": "OrcaLink",
+        "url": "https://orcalinkapp.com/"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Fotógrafos, designers, tatuadores, personal trainers, videomakers, nutricionistas, arquitetos e demais profissionais autônomos brasileiros"
+      }
+    }
+    </script>
+
+    <!-- Schema.org: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "OrcaLink",
+      "url": "https://orcalinkapp.com/",
+      "logo": "https://orcalinkapp.com/og-image.png",
+      "email": "orcalink.app@gmail.com",
+      "sameAs": [
+        "https://instagram.com/orcalink.app"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "orcalink.app@gmail.com",
+        "availableLanguage": ["Portuguese"]
+      }
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Precisa saber programar pra usar a OrcaLink?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não. O editor é visual, arrastar e soltar. Se você sabe usar o Instagram, sabe usar a OrcaLink. Nenhuma linha de código necessária."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qual a diferença pro Typeform ou Linktree?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Typeform coleta dados mas não calcula preço. Linktree só redireciona links. A OrcaLink é a única que gera orçamento automático para o cliente final, em português, feito para MEIs brasileiros."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como o cliente paga o serviço pela OrcaLink?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A OrcaLink não processa pagamentos — ela gera o orçamento e conecta você com o cliente. O pagamento acontece como você preferir: Pix, cartão, boleto. Integração de pagamento está no roadmap."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "E se meu preço variar muito por projeto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Por isso o formulário é interativo. Você cria perguntas (qual o tamanho, tem deadline agressivo, etc) e cada resposta adiciona ou desconta valor automaticamente. O preço final é gerado com base nas escolhas do cliente."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O plano grátis é para sempre?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Sem trial, sem cartão de crédito. O plano grátis com 1 formulário e 30 orçamentos/mês é seu para sempre. Upgrade só quando fizer sentido pra você."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Funciona pra qualquer profissão?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Qualquer profissional que cobra por serviço e recebe pedidos de orçamento no WhatsApp ou Instagram. Fotógrafo, designer, tatuador, personal, nutricionista, videomaker, advogado, arquiteto — todos."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
