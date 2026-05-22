@@ -4,7 +4,7 @@ import { Check, X, AlertTriangle } from 'lucide-react'
 
 const features = [
   {
-    label: 'Cliente calcula sozinho',
+    label: 'Filtra cliente curioso',
     planilha: { status: 'no' },
     typeform: { status: 'no', note: 'só coleta dados' },
     orcalink: { status: 'yes' },

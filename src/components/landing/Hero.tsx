@@ -46,7 +46,7 @@ export default function Hero() {
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 bg-light border border-blue-200 rounded-full px-4 py-1.5 mb-8">
               <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
               <span className="text-xs font-semibold text-primary font-heading">
-                A única ferramenta brasileira de orçamento automático
+                O link de pré-atendimento pra fotógrafo
               </span>
             </motion.div>
 
@@ -54,15 +54,16 @@ export default function Hero() {
               variants={itemVariants}
               className="font-heading font-bold text-4xl sm:text-5xl lg:text-[56px] text-dark leading-[1.08] tracking-tight mb-6"
             >
-              Seu cliente pergunta o preço.{' '}
-              <span className="text-primary">Você já respondeu.</span>
+              Pare de responder{' '}
+              <span className="text-primary italic">"quanto custa?"</span>{' '}
+              no WhatsApp o dia inteiro.
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="text-lg text-muted leading-relaxed mb-10"
             >
-              Crie um link com seu cardápio de serviços. Seu cliente abre, escolhe o que quer e já vê o valor — sem te mandar mensagem.
+              Crie um link de pré-orçamento pros seus ensaios. O cliente escolhe o que quer, vê uma estimativa na hora e chega no seu WhatsApp <span className="font-semibold text-dark">pronto pra fechar</span>.
             </motion.p>
 
             {/* CTAs */}

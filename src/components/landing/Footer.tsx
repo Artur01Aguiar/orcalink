@@ -21,7 +21,7 @@ export default function Footer() {
               </span>
             </a>
             <p className="text-white/50 text-sm leading-relaxed">
-              Seu cliente calcula.<br />Você fecha.
+              Cliente curioso vê o preço.<br />Cliente pronto te chama.
             </p>
           </div>
 

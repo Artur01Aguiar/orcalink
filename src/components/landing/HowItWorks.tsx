@@ -65,9 +65,9 @@ const steps = [
   {
     icon: Calculator,
     step: '03',
-    title: 'Seu cliente calcula sozinho',
+    title: 'Cliente vê a estimativa na hora',
     description:
-      'O cliente abre o link, responde as perguntas e vê o preço instantaneamente. Você recebe a notificação.',
+      'O cliente abre o link, responde as perguntas e vê o valor instantaneamente. Curioso some sozinho. Pronto te chama no WhatsApp.',
     visual: (
       <div className="bg-background rounded-xl p-4 border border-border">
         <div className="bg-white rounded-xl border border-border overflow-hidden">
